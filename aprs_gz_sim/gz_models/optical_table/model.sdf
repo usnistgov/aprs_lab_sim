@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="optical_table">
+    <static>true</static>
+
+    <link name="optical_table_link">
+
+      <visual name="optical_table_visual">
+        <!-- <pose>-0.1000125 0.320675 0.422275 0 0 0 </pose> -->
+        <!-- <pose>-0.1000125 0.320675 0 0 0 1.5708 </pose> -->
+        <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 2.4384 1.2192 0.84455 </size>
+          </box>
+          <!-- <mesh>
+            <uri>model://optical_table/meshes/New_Motoman_Table.stl</uri>
+          </mesh> -->
+        </geometry>
+        <material>
+          <ambient>0.0 0.0 0.0 1.0</ambient>
+          <diffuse>0.1 0.1 0.1 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="optical_table_collision">
+        <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 2.4384 1.2192 0.84455 </size>
+          </box>
+          <!-- <mesh>
+            <uri>model://optical_table/meshes/New_Motoman_Table.stl</uri>
+          </mesh> -->
+        </geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

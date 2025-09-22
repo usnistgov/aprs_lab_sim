@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aprs_lab_robots">
+
+  <link name="world"/>
+
+  <link name="aprs_ur_base_link"/>
+
+  <joint name = "ur_world_to_base" type = "fixed">
+    <origin rpy = "0 0 0" xyz = "0.7864625 -1.375 0.8001"/>
+    <parent link = "world"/>
+    <child link = "aprs_ur_base_link"/>
+  </joint>
+
+  <xacro:include filename="$(find aprs_description)/urdf/ur/aprs_ur_macro.xacro"/>
+  
+  <xacro:aprs_ur
+    parent="aprs_ur_base_link"
+    >
+  </xacro:aprs_ur>
+
+</robot>

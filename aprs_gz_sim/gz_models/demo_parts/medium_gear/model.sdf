@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="medium_gear">
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+
+    <link name="medium_gear">
+      <inertial>
+        <pose>0 0 0.02 0 0 1.57</pose>
+        <mass>0.7</mass>
+        <inertia>
+          <ixx>0.00108</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00024</iyy>
+          <iyz>0</iyz>
+          <izz>0.00113</izz>
+        </inertia>
+      </inertial>
+      
+      <visual name="medium_gear">
+        <geometry>
+          <mesh>
+            <uri>model://demo_parts/medium_gear/meshes/medium_gear.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1.0 1.0 1.0 1.0</ambient>
+          <diffuse>1.0 1.0 1.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="medium_gear_collision">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://demo_parts/medium_gear/meshes/medium_gear.stl</uri>
+          </mesh>
+        </geometry>
+        <max_contacts>5</max_contacts>
+        <surface>
+          <contact>
+            <ode>
+              <max_vel>0.0</max_vel>
+              <min_depth>0.0</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>1000</mu>
+              <mu2>1000</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="work_area">
+    <static>true</static>
+
+    <link name="work_area_link">
+
+      <visual name="work_area_visual">
+        <pose>0 0 0.00005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 4.1402 3.6322 0.0001 </size>
+          </box>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>0.0 0.0 0.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="work_area_collision">
+        <pose>0 0 0.00005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 4.1402 3.6322 0.0001 </size>
+          </box>
+        </geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

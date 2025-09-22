@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="aprs_motoman" params="
+    parent
+    camera_active
+    camera_type
+">
+
+    <!-- Inclue motoman robot macro -->
+    <xacro:include filename="$(find aprs_description)/urdf/motoman/motoman_sia20_macro.xacro"/>
+
+    <!-- Include ROS2 Control macro -->
+    <xacro:include filename="$(find aprs_description)/urdf/motoman/aprs_motoman.ros2_control.xacro"/>
+
+    <!-- Inclue gripper macro -->
+    <xacro:include filename="$(find aprs_description)/urdf/vacuum_gripper/vacuum_gripper_macro.xacro"/>
+
+    <xacro:property name="initial_positions_file" default="$(find aprs_description)/config/motoman_initial_positions.yaml"/>
+
+    <!-- Run motoman macro -->
+    <xacro:motoman_sia20d
+        parent="${parent}">
+    </xacro:motoman_sia20d>
+
+    <!-- Run motoman macro -->
+    <xacro:aprs_motoman_ros2_control
+      name="motoman"
+      initial_positions="${xacro.load_yaml(initial_positions_file)}">
+    </xacro:aprs_motoman_ros2_control>
+
+    <!-- Run gripper macro -->
+    <xacro:vacuum_gripper
+      parent="motoman_gripper_link"
+      prefix="motoman"
+      use_camera="${camera_active}"
+      camera_type="${camera_type}"
+      >
+    </xacro:vacuum_gripper>
+
+  </xacro:macro>
+</robot>

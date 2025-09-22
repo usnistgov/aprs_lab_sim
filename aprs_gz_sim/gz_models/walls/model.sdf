@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="walls">
+    <static>true</static>
+
+    <link name="walls_link">
+
+      <visual name="tv_wall">
+        <pose>2.0701 0 1.5 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.05 3.6322 3 </size>
+          </box>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="tv_wall_collision">
+        <pose>2.0701 0 1.5 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.05 3.6322 3 </size>
+          </box>
+        </geometry>
+      </collision>
+
+      <visual name="side_wall">
+        <pose>0 1.8161 1.5 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 4.1402 0.05 3 </size>
+          </box>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>1.0 1.0 1.0 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="side_wall_collision">
+        <pose>0 1.8161 1.5 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 4.1402 0.05 3 </size>
+          </box>
+        </geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="franka_cart">
+    <static>true</static>
+
+    <link name="franka_cart_link">
+
+      <visual name="franka_cart_visual">
+        <pose>-1 -1.375 0.41989375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.9890125 0.6746875 0.8397875 </size>
+          </box>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>0.5 0.5 0.5 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="franka_cart_collision">
+        <pose>-1 -1.375 0.41989375 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.9890125 0.6746875 0.8397875 </size>
+          </box>
+        </geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

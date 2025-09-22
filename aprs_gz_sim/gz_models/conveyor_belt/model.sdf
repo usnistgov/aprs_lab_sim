@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="conveyor_belt">
+      <static>false</static>
+
+      <link name="conveyor_base">
+
+        <visual name="conveyor_base_visual">
+          <!-- <pose>-0.15 -0.6 0.445 0 0 0</pose> -->
+          <pose>-2 -7.11 0.0685 0 0 0</pose>
+          <geometry>
+            <!-- <box>
+              <size> 3.05 0.65 0.89 </size>
+            </box> -->
+            <mesh>
+              <uri>model://conveyor_belt/meshes/revised_conveyor.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>0.3 0.3 0.3 1.0</diffuse>
+          </material>
+        </visual>
+        <collision name="conveyor_base_collision">
+          <pose>-0.15 -0.6 0.35 0 0 0</pose>
+          <geometry>
+            <box>
+              <size> 3.05 0.65 0.7 </size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <link name="conveyor_belt">
+
+        <!-- <visual name="conveyor_belt_visual">
+          <pose>-0.15 -0.6 0.85 0 0 0</pose>
+          <geometry>
+            <box>
+              <size> 3.05 0.5 0.1 </size>
+            </box>
+          </geometry>
+          <material>
+              <ambient>0.0 0.0 0.0 1.0</ambient>
+              <diffuse>0.1 0.1 0.1 1.0</diffuse>
+          </material>
+        </visual> -->
+        <inertial>
+          <inertia>
+            <ixx>3.8185</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1781.5</iyy>
+            <iyz>0</iyz>
+            <izz>1784.72</izz>
+          </inertia>
+          <mass>100</mass>
+        </inertial>
+        <collision name="conveyor_belt_collision">
+          <pose>-0.15 -0.6 0.87 0 0 0</pose>
+          <geometry>
+            <box>
+              <size> 3.2 0.5 0.1 </size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name="belt_joint" type="prismatic">
+        <parent>conveyor_base</parent>
+        <child>conveyor_belt</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <limit>
+            <lower>-0.4</lower>
+            <upper>0.4</upper>
+            <effort>100</effort>
+          </limit>
+        </axis>
+      </joint>
+
+      <plugin
+        filename="libConveyorPlugin.so"
+        name="aprs_plugins::ConveyorPlugin">
+        <max_velocity>0.5</max_velocity>
+      </plugin>
+    
+    </model>
+
+</sdf>

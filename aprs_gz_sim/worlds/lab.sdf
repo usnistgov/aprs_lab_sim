@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<sdf version='1.10'>
+  <world name="lab">
+    <scene>
+      <grid>false</grid>
+      <shadows>false</shadows>
+    </scene>
+    
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+        name="gz::sim::systems::Physics">
+      <physics>
+        <real_time_update_rate>500</real_time_update_rate>
+        <iters>30</iters>  
+      </physics>
+    </plugin>
+
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <plugin
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+
+    <light type="directional" name="sun">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <visualize>false</visualize>
+    </light>
+    
+    <!-- <model name='ground_plane'>
+      <static>true</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.800000012 0.800000012 0.800000012 1</ambient>
+            <diffuse>0.800000012 0.800000012 0.800000012 1</diffuse>
+            <specular>0.800000012 0.800000012 0.800000012 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0 0 0 0</pose>
+      <self_collide>false</self_collide>
+    </model> -->
+    
+    <include>
+      <name>optical_table</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://optical_table</uri>
+    </include>
+
+    <!-- <include>
+      <name>conveyor_belt</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://conveyor_belt</uri>
+    </include> -->
+
+    <include>
+      <name>franka_cart</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://franka_cart</uri>
+    </include>
+
+    <include>
+      <name>ur_cart</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://ur_cart</uri>
+    </include>
+
+    <include>
+      <name>work_area</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://work_area</uri>
+    </include>
+
+    <include>
+      <name>walls</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://walls</uri>
+    </include>
+
+    <include>
+      <name>light_bars</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://light_bars</uri>
+    </include>
+    
+    <include>
+      <name>teach_table</name>
+      <pose>0 0 0 0 0 0</pose>
+      <uri>model://teach_table</uri>
+    </include>
+  </world>
+</sdf>

@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="ur_cart">
+    <static>true</static>
+
+    <link name="ur_cart_link">
+
+      <visual name="ur_cart_visual">
+        <pose>1 -1.375 0.40005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.727075 0.644525 0.8001 </size>
+          </box>
+        </geometry>
+        <material>
+            <ambient>0.0 0.0 0.0 1.0</ambient>
+            <diffuse>0.5 0.5 0.5 1.0</diffuse>
+        </material>
+      </visual>
+
+      <collision name="ur_cart_collision">
+        <pose>1.0 -1.375 0.40005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size> 0.727075 0.644525 0.8001 </size>
+          </box>
+        </geometry>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

@@ -1,0 +1,23 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    
+    # List of controllers to load
+    passthrough_controller:
+      type: passthrough_controller/PassthroughController
+
+# Controller-specific parameters
+passthrough_controller:
+  ros__parameters:
+    # List your robot's joint names here
+    joints:
+      - joint1
+      - joint2  
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+      # Add all your robot's joint names
+    
+    # Topic where your real robot publishes joint states
+    real_robot_joint_states_topic: "/real_robot/joint_states"

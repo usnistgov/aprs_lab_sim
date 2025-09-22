@@ -1,0 +1,285 @@
+# ==========================
+# Combined Robot Description
+# ==========================
+
+simulation:
+  controller_manager:
+    ros__parameters:
+      update_rate: 1000
+
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      fanuc_joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+      franka_joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+      motoman_joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+      
+      ur_joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+  fanuc_joint_trajectory_controller:
+    ros__parameters:
+      joints:
+        - joint_1
+        - joint_2
+        - joint_3      
+        - joint_4
+        - joint_5
+        - joint_6
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      state_publish_rate: 1000.0
+      action_monitor_rate: 20.0
+      allow_partial_joints_goal: false
+      constraints:
+        stopped_velocity_tolerance: 0.2
+        goal_time: 0.0
+        joint_1: { trajectory: 0.5, goal: 0.1 }
+        joint_2: { trajectory: 0.5, goal: 0.1 }
+        joint_3: { trajectory: 0.5, goal: 0.1 }
+        joint_4: { trajectory: 0.5, goal: 0.1 }
+        joint_5: { trajectory: 0.5, goal: 0.1 }
+        joint_6: { trajectory: 0.5, goal: 0.1 }
+
+  franka_joint_trajectory_controller:
+    ros__parameters:
+        joints:
+          - fr3_joint1
+          - fr3_joint2
+          - fr3_joint3      
+          - fr3_joint4
+          - fr3_joint5
+          - fr3_joint6
+          - fr3_joint7
+        command_interfaces:
+          - position
+        state_interfaces:
+          - position
+          - velocity
+        state_publish_rate: 1000.0
+        action_monitor_rate: 20.0
+        allow_partial_joints_goal: false
+
+  motoman_joint_trajectory_controller:
+      ros__parameters:
+        joints:
+          - joint_b
+          - joint_e
+          - joint_l    
+          - joint_r
+          - joint_s
+          - joint_t
+          - joint_u
+        command_interfaces:
+          - position
+        state_interfaces:
+          - position
+          - velocity
+        state_publish_rate: 1000.0
+        action_monitor_rate: 20.0
+        allow_partial_joints_goal: false
+
+  ur_joint_trajectory_controller:
+    ros__parameters:
+        joints:
+          - shoulder_pan_joint
+          - shoulder_lift_joint
+          - elbow_joint
+          - wrist_1_joint
+          - wrist_2_joint
+          - wrist_3_joint
+        command_interfaces:
+          - position
+        state_interfaces:
+          - position
+          - velocity
+        state_publish_rate: 1000.0
+        action_monitor_rate: 20.0
+        allow_partial_joints_goal: false
+        constraints:
+          stopped_velocity_tolerance: 0.2
+          goal_time: 0.0
+          floor_shoulder_pan_joint: { trajectory: 0.5, goal: 0.1 }
+          floor_shoulder_lift_joint: { trajectory: 0.5, goal: 0.1 }
+          floor_elbow_joint: { trajectory: 0.5, goal: 0.1 }
+          floor_wrist_1_joint: { trajectory: 0.5, goal: 0.1 }
+          floor_wrist_2_joint: { trajectory: 0.5, goal: 0.1 }
+          floor_wrist_3_joint: { trajectory: 0.5, goal: 0.1 }
+
+# ======================
+# Namespaced Controllers
+# ======================
+
+simulation/fanuc:
+  controller_manager:
+    ros__parameters:
+      update_rate: 1000 # Hz
+
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      passthrough_controller:
+        type: passthrough_controller/PassthroughController
+
+      joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+  passthrough_controller:
+    ros__parameters:
+      joints:
+        - joint_1
+        - joint_2
+        - joint_3      
+        - joint_4
+        - joint_5
+        - joint_6
+
+      real_robot_joint_states_topic: "/fanuc/joint_states"
+  
+  joint_trajectory_controller:
+    ros__parameters:
+      joints:
+        - joint_1
+        - joint_2
+        - joint_3      
+        - joint_4
+        - joint_5
+        - joint_6
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      state_publish_rate: 1000.0
+      action_monitor_rate: 20.0
+      allow_partial_joints_goal: false
+      constraints:
+        stopped_velocity_tolerance: 0.2
+        goal_time: 0.0
+        joint_1: { trajectory: 0.5, goal: 0.1 }
+        joint_2: { trajectory: 0.5, goal: 0.1 }
+        joint_3: { trajectory: 0.5, goal: 0.1 }
+        joint_4: { trajectory: 0.5, goal: 0.1 }
+        joint_5: { trajectory: 0.5, goal: 0.1 }
+        joint_6: { trajectory: 0.5, goal: 0.1 }
+  
+simulation/franka:
+  controller_manager:
+    ros__parameters:
+      update_rate: 1000 # Hz
+    
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+  joint_trajectory_controller:
+    ros__parameters:
+      joints:
+        - fr3_joint1
+        - fr3_joint2
+        - fr3_joint3      
+        - fr3_joint4
+        - fr3_joint5
+        - fr3_joint6
+        - fr3_joint7
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+      state_publish_rate: 1000.0
+      action_monitor_rate: 20.0
+      allow_partial_joints_goal: false
+
+simulation/motoman:
+  controller_manager:
+    ros__parameters:
+      update_rate: 1000 # Hz
+    
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      passthrough_controller:
+        type: passthrough_controller/PassthroughController
+
+      joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
+  passthrough_controller:
+    ros__parameters:
+      joints:
+        - joint_b
+        - joint_e
+        - joint_l    
+        - joint_r
+        - joint_s
+        - joint_t
+        - joint_u
+
+      real_robot_joint_states_topic: "/motoman/joint_states"
+        
+  joint_trajectory_controller:
+    ros__parameters:
+      joints:
+        - joint_b
+        - joint_e
+        - joint_l    
+        - joint_r
+        - joint_s
+        - joint_t
+        - joint_u
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      state_publish_rate: 1000.0
+      action_monitor_rate: 20.0
+      allow_partial_joints_goal: false
+
+simulation/ur:
+  controller_manager:
+    ros__parameters:
+      update_rate: 1000 # Hz
+    
+      joint_state_broadcaster:
+        type: joint_state_broadcaster/JointStateBroadcaster
+
+      joint_trajectory_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+  
+  joint_trajectory_controller:
+    ros__parameters:
+      joints:
+        - shoulder_pan_joint
+        - shoulder_lift_joint
+        - elbow_joint
+        - wrist_1_joint
+        - wrist_2_joint
+        - wrist_3_joint
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
+        - velocity
+      state_publish_rate: 1000.0
+      action_monitor_rate: 20.0
+      allow_partial_joints_goal: false
+      constraints:
+        stopped_velocity_tolerance: 0.2
+        goal_time: 0.0
+        floor_shoulder_pan_joint: { trajectory: 0.5, goal: 0.1 }
+        floor_shoulder_lift_joint: { trajectory: 0.5, goal: 0.1 }
+        floor_elbow_joint: { trajectory: 0.5, goal: 0.1 }
+        floor_wrist_1_joint: { trajectory: 0.5, goal: 0.1 }
+        floor_wrist_2_joint: { trajectory: 0.5, goal: 0.1 }
+        floor_wrist_3_joint: { trajectory: 0.5, goal: 0.1 }

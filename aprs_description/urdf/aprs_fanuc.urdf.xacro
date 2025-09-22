@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aprs_fanuc">
+
+  <link name="world"/>
+
+  <link name="aprs_fanuc_base_link"/>
+
+  <joint name = "fanuc_world_to_base" type = "fixed">
+    <origin rpy = "0 0 0" xyz = "-0.5222875 -0.073025 0.84455"/>
+    <parent link = "world"/>
+    <child link = "aprs_fanuc_base_link"/>
+  </joint>
+
+  <xacro:include filename="$(find aprs_description)/urdf/fanuc/aprs_fanuc_macro.xacro"/>
+  
+  <xacro:arg name="fanuc_controller" default="$(find aprs_description)/config/robot_controllers.yaml" />
+
+  <xacro:arg name="camera_active_arg" default="false"/>
+  <xacro:property name="camera_active" value="$(arg camera_active_arg)" />
+
+  <xacro:arg name="camera_type_arg" default="rgb"/>
+  <xacro:property name="camera_type" value="$(arg camera_type_arg)" />
+  
+  <xacro:aprs_fanuc
+    parent="aprs_fanuc_base_link"
+    camera_active="${camera_active}"
+    camera_type="${camera_type}"
+    >
+  </xacro:aprs_fanuc>
+
+  <gazebo>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <ros>
+        <namespace>simulation/fanuc</namespace>
+      </ros>
+      <parameters>$(arg fanuc_controller)</parameters>
+      <load_params_directly>true</load_params_directly>
+      <robot_param>robot_description</robot_param>
+    </plugin>
+  </gazebo>
+
+</robot>

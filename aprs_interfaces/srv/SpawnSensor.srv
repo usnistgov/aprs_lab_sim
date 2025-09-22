@@ -1,0 +1,5 @@
+string name
+string xml
+geometry_msgs/Pose pose
+---
+bool success

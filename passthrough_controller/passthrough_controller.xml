@@ -1,0 +1,9 @@
+<library path="passthrough_controller">
+  <class name="passthrough_controller/PassthroughController" 
+         type="passthrough_controller::PassthroughController" 
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+      A controller that subscribes to joint states from a real robot and applies them to a simulated robot
+    </description>
+  </class>
+</library>

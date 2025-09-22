@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="aprs_lab_robots">
+
+  <link name="world"/>
+
+  <link name="aprs_ur_base_link"/>
+
+  <link name="aprs_fanuc_base_link"/>
+
+  <link name="aprs_motoman_base_link"/>
+
+  <joint name = "ur_world_to_base" type = "fixed">
+    <origin rpy = "0 0 0" xyz = "0.7864625 -1.375 0.8001"/>
+    <parent link = "world"/>
+    <child link = "aprs_ur_base_link"/>
+  </joint>
+
+  <joint name = "fanuc_world_to_base" type = "fixed">
+    <origin rpy = "0 0 0" xyz = "-0.5222875 -0.073025 0.84455"/>
+    <parent link = "world"/>
+    <child link = "aprs_fanuc_base_link"/>
+  </joint>
+
+  <joint name = "franka_world_to_base" type = "fixed">
+    <origin rpy = "0 0 0" xyz = "-1.3145625 -1.375 0.8397875"/>
+    <parent link = "world"/>
+    <child link = "aprs_franka_base_link"/>
+  </joint>
+
+  <joint name = "motoman_world_to_base" type = "fixed">
+    <origin rpy = "0 0 3.14159" xyz = "0.4953 -0.08255 0.9"/>
+    <parent link = "world"/>
+    <child link = "aprs_motoman_base_link"/>
+  </joint>
+
+  <xacro:include filename="$(find aprs_description)/urdf/ur/aprs_ur_macro.xacro"/>
+
+  <xacro:include filename="$(find aprs_description)/urdf/fanuc/aprs_fanuc_macro.xacro"/>
+
+  <xacro:include filename="$(find aprs_description)/urdf/franka/aprs_franka_macro.xacro"/>
+
+  <xacro:include filename="$(find aprs_description)/urdf/motoman/aprs_motoman_macro.xacro"/>
+
+  <xacro:arg name="controllers" default="$(find aprs_description)/config/robot_controllers.yaml" />
+
+  <xacro:arg name="ur_camera_active_arg" default="false"/>
+  <xacro:property name="ur_camera_active" value="$(arg ur_camera_active_arg)" />
+
+  <xacro:arg name="ur_camera_type_arg" default="rgb"/>
+  <xacro:property name="ur_camera_type" value="$(arg ur_camera_type_arg)" />
+
+  <xacro:aprs_ur
+    parent="aprs_ur_base_link"
+    camera_active="${ur_camera_active}"
+    camera_type="${ur_camera_type}"
+    >
+  </xacro:aprs_ur>
+
+  <xacro:arg name="fanuc_camera_active_arg" default="false"/>
+  <xacro:property name="fanuc_camera_active" value="$(arg fanuc_camera_active_arg)" />
+
+  <xacro:arg name="fanuc_camera_type_arg" default="rgb"/>
+  <xacro:property name="fanuc_camera_type" value="$(arg fanuc_camera_type_arg)" />
+
+  <xacro:aprs_fanuc
+    parent="aprs_fanuc_base_link"
+    camera_active="${fanuc_camera_active}"
+    camera_type="${fanuc_camera_type}"
+    >
+  </xacro:aprs_fanuc>
+
+  <xacro:aprs_franka></xacro:aprs_franka>
+
+  <xacro:arg name="motoman_camera_active_arg" default="false"/>
+  <xacro:property name="motoman_camera_active" value="$(arg motoman_camera_active_arg)" />
+
+  <xacro:arg name="motoman_camera_type_arg" default="rgb"/>
+  <xacro:property name="motoman_camera_type" value="$(arg motoman_camera_type_arg)" />
+
+  <xacro:aprs_motoman
+    parent="aprs_motoman_base_link"
+    camera_active="${motoman_camera_active}"
+    camera_type="${motoman_camera_type}"
+    >
+  </xacro:aprs_motoman>
+
+  <gazebo>
+    <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <ros>
+        <namespace>simulation</namespace>
+      </ros>
+      <parameters>$(arg controllers)</parameters>
+      <load_params_directly>true</load_params_directly>
+    </plugin>
+  </gazebo>
+
+</robot>
