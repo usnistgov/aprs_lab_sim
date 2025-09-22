@@ -122,7 +122,9 @@ controller_interface::return_type PassthroughController::update(
     int joint_index = find_joint_index(joint_names_[i], msg);
     
     if (joint_index >= 0 && joint_index < static_cast<int>(msg.position.size())) {
-      command_interfaces_[i].set_value(msg.position[joint_index]);
+      if(!command_interfaces_[i].set_value(msg.position[joint_index])){
+        throw std::runtime_error("Unable to set joint");
+      }
     } else {
       RCLCPP_WARN_THROTTLE(
         get_node()->get_logger(), *get_node()->get_clock(), 1000,

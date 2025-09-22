@@ -30,11 +30,10 @@ def launch_setup(context, *args, **kwargs):
     joint_trajectory_controllers = []
     passthrough_controllers = []
 
-    # robots=['fanuc', 'franka', 'motoman', 'ur']
-    robots=["motoman"]
+    robots=['fanuc', 'franka', 'motoman', 'ur']
+    # robots=["motoman"]
 
     for robot in robots:
-    # for robot in ["motoman", "fanuc"]:
         urdf = os.path.join(get_package_share_directory('aprs_description'), 'urdf', f'aprs_{robot}.urdf.xacro')
         
         doc = xacro.process_file(urdf)
@@ -82,20 +81,20 @@ def launch_setup(context, *args, **kwargs):
         ))
         
         # Joint trajectory controllers
-        jt_controller_name = f'joint_trajectory_controller'
-        jt_arguments = [jt_controller_name, "-c", f"/simulation/{robot}/controller_manager"]
-        if mirror_env and robot in ["fanuc", "motoman"]:
-            jt_arguments.append('--inactive')
+        # jt_controller_name = f'joint_trajectory_controller'
+        # jt_arguments = [jt_controller_name, "-c", f"/simulation/{robot}/controller_manager"]
+        # if mirror_env and robot in ["fanuc", "motoman"]:
+        #     jt_arguments.append('--inactive')
 
-        joint_trajectory_controllers.append(Node(
-            package='controller_manager',
-            executable='spawner',
-            name=f'{robot}_controller_spawner',
-            arguments=jt_arguments,
-            parameters=[
-                {'use_sim_time': True},
-            ],
-        ))
+        # joint_trajectory_controllers.append(Node(
+        #     package='controller_manager',
+        #     executable='spawner',
+        #     name=f'{robot}_controller_spawner',
+        #     arguments=jt_arguments,
+        #     parameters=[
+        #         {'use_sim_time': True},
+        #     ],
+        # ))
 
         # joint_trajectory_controllers.append(Node(
         #     package='controller_manager',
@@ -110,18 +109,25 @@ def launch_setup(context, *args, **kwargs):
         #     ],
         # ))
         
-        if mirror_env and robot in ["fanuc", "motoman"]:
-            passthrough_controllers.append(Node(
-                package='controller_manager',
-                executable='spawner',
-                namespace=f"simulation/{robot}",
-                arguments=[
-                    'passthrough_controller',
-                ],
-                parameters=[
-                    {'use_sim_time': True},
-                ],
-            ))
+        # if mirror_env and robot in ["fanuc", "motoman"]:
+        #     passthrough_controllers.append(Node(
+        #         package='controller_manager',
+        #         executable='spawner',
+        #         namespace=f"simulation/{robot}",
+        #         arguments=[
+        #             'passthrough_controller',
+        #         ],
+        #         parameters=[
+        #             {'use_sim_time': True},
+        #         ],
+        #     ))
+    
+    controller_loader_node = Node(
+        package="aprs_gz_sim",
+        executable="seperate_load_controllers.py",
+        output="screen",
+        parameters=[{'use_sim_time': True}]
+    )
 
     nodes_to_start = [
         *robot_state_publishers,
@@ -129,6 +135,7 @@ def launch_setup(context, *args, **kwargs):
         *joint_state_broadcasters,
         *passthrough_controllers,
         *joint_trajectory_controllers,
+        controller_loader_node
     ]
 
     return nodes_to_start
