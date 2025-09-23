@@ -32,6 +32,7 @@ class ControllerStarter(Node):
         # Declare mirror_env so it can be read when passed in from the launch file
         self.declare_parameter('mirror_env', True)
         raw_mirror = self.get_parameter("mirror_env").value
+
         # mirror_env may be provided as a bool or as a string from launch substitutions
         if isinstance(raw_mirror, bool):
             self.mirror_env = raw_mirror
@@ -44,11 +45,13 @@ class ControllerStarter(Node):
         mimic_controller = 'passthrough_controller'
 
         self.robot_controllers = {
-            'fanuc': base_controllers + [mimic_controller] if self.mirror_env else [],
-            'motoman': base_controllers + [mimic_controller] if self.mirror_env else [],
+            'fanuc': base_controllers + ([mimic_controller] if self.mirror_env else []),
+            'motoman': base_controllers + ([mimic_controller] if self.mirror_env else []),
             'franka': base_controllers,
             'ur': base_controllers
         }
+
+        self.get_logger().info(f"{self.robot_controllers}")
 
         if self.mirror_env:
             self.active_controllers = {
@@ -112,6 +115,7 @@ class ControllerStarter(Node):
 
     async def load_controllers(self):
         for name, controllers in self.robot_controllers.items():
+            self.get_logger().info(f"Loading {controllers} for {name}")
             client = self.create_client(LoadController, f"/simulation/{name}/controller_manager/load_controller")
             await ROSAsyncAdapter.await_service_ready(client)
             for controller in controllers:
