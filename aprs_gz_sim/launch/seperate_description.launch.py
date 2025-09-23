@@ -72,13 +72,13 @@ def launch_setup(context, *args, **kwargs):
         ))
         
         # Joint state broadcaster
-        joint_state_broadcasters.append(Node(
-            package='controller_manager',
-            executable='spawner',
-            name=f'{robot}_joint_state_broadcaster_spawner',
-            arguments = ["joint_state_broadcaster", "-c", f"/simulation/{robot}/controller_manager"],
-            parameters=[{"use_sim_time": True}]
-        ))
+        # joint_state_broadcasters.append(Node(
+        #     package='controller_manager',
+        #     executable='spawner',
+        #     name=f'{robot}_joint_state_broadcaster_spawner',
+        #     arguments = ["joint_state_broadcaster", "-c", f"/simulation/{robot}/controller_manager"],
+        #     parameters=[{"use_sim_time": True}]
+        # ))
         
         # Joint trajectory controllers
         # jt_controller_name = f'joint_trajectory_controller'
@@ -126,7 +126,7 @@ def launch_setup(context, *args, **kwargs):
         package="aprs_gz_sim",
         executable="seperate_load_controllers.py",
         output="screen",
-        parameters=[{'use_sim_time': True}]
+        parameters=[{'use_sim_time': True, 'mirror_env': bool(mirror_env)}]
     )
 
     nodes_to_start = [

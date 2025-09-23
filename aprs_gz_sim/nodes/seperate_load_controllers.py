@@ -3,6 +3,7 @@
 from typing import cast
 import asyncio
 
+import rclpy
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.parameter import Parameter
@@ -23,22 +24,33 @@ class ControllerStarter(Node):
     def __init__(self):
         super().__init__("controller_starter_node")
 
+        self.get_logger().info("Inside CONTROLLER STARTER" + "\n"*100)
+
         sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
         self.set_parameters([sim_time_param])
 
-        self.mimic_env = self.get_parameter("mimc_env").value
+        # Declare mirror_env so it can be read when passed in from the launch file
+        self.declare_parameter('mirror_env', True)
+        raw_mirror = self.get_parameter("mirror_env").value
+        # mirror_env may be provided as a bool or as a string from launch substitutions
+        if isinstance(raw_mirror, bool):
+            self.mirror_env = raw_mirror
+        else:
+            self.mirror_env = str(raw_mirror).lower() == 'true'
+
+        self.get_logger().info(f"{self.mirror_env}" +"\n"*25)
 
         base_controllers = ['joint_state_broadcaster', 'joint_trajectory_controller']
         mimic_controller = 'passthrough_controller'
 
         self.robot_controllers = {
-            'fanuc': base_controllers + [mimic_controller] if self.mimic_env else [],
-            'motoman': base_controllers + [mimic_controller] if self.mimic_env else [],
+            'fanuc': base_controllers + [mimic_controller] if self.mirror_env else [],
+            'motoman': base_controllers + [mimic_controller] if self.mirror_env else [],
             'franka': base_controllers,
             'ur': base_controllers
         }
 
-        if self.mimic_env:
+        if self.mirror_env:
             self.active_controllers = {
                 "fanuc": "passthrough_controller",
                 "motoman": "passthrough_controller"
@@ -49,19 +61,30 @@ class ControllerStarter(Node):
 
 
     def handle_switch_motoman(self, request: Trigger.Request, response: Trigger.Response):
-        asyncio.create_task(self._async_switch_controllers("motoman"))
+        # Schedule the coroutine on the running asyncio loop from the ROS callback thread
+        try:
+            loop = getattr(self, '_asyncio_loop')
+            asyncio.run_coroutine_threadsafe(self._async_switch_controllers("motoman"), loop)
+        except Exception:
+            # Fallback if loop not set yet (should not happen normally)
+            asyncio.create_task(self._async_switch_controllers("motoman"))
         response.success = True
         response.message = 'Switch request queued'
         return response
 
     def handle_switch_fanuc(self, request: Trigger.Request, response: Trigger.Response):
-        asyncio.create_task(self._async_switch_controllers("fanuc"))
+        try:
+            loop = getattr(self, '_asyncio_loop')
+            asyncio.run_coroutine_threadsafe(self._async_switch_controllers("fanuc"), loop)
+        except Exception:
+            asyncio.create_task(self._async_switch_controllers("fanuc"))
         response.success = True
         response.message = 'Switch request queued'
         return response
 
     async def _async_switch_controllers(self, robot_name: str):
         try:
+            self.get_logger().info(f"Switching from controller {self.active_controllers[robot_name]} for robot {robot_name}")
             client = self.create_client(SwitchController, f"/simulation/{robot_name}/controller_manager/switch_controller")
             await ROSAsyncAdapter.await_service_ready(client)
 
@@ -69,7 +92,8 @@ class ControllerStarter(Node):
             # Activate the trajectory controller for motoman
             controller_to_activate = 'joint_trajectory_controller' if self.active_controllers[robot_name] == "passthrough_controller" else "passthrough_controller"
             req.activate_controllers = [controller_to_activate]
-            req.deactivate_controllers = self.active_controllers[robot_name]
+            # deactivate_controllers must be a list
+            req.deactivate_controllers = [self.active_controllers[robot_name]] if isinstance(self.active_controllers[robot_name], str) else list(self.active_controllers[robot_name])
             # Optionally, you can set deactivate controllers if supported by your controller manager
             req.strictness = 1
             req.timeout = Duration(seconds=3).to_msg()
@@ -123,7 +147,7 @@ class ControllerStarter(Node):
             await ROSAsyncAdapter.await_service_ready(client)
             req = SwitchController.Request()
 
-            if self.mimic_env and name in ["fanuc", "motoman"]:
+            if self.mirror_env and name in ["fanuc", "motoman"]:
                 req.activate_controllers = ["joint_state_broadcaster", "passthrough_controller"]
             else:
                 req.activate_controllers = controllers
@@ -143,6 +167,9 @@ async def run():
     executor = MultiThreadedExecutor()
     executor.add_node(controller_starter)
     shutdown_event = asyncio.Event()
+
+    # store running asyncio loop on the controller starter so ROS callbacks can schedule coroutines
+    controller_starter._asyncio_loop = asyncio.get_running_loop()
 
     # Start executor spinner in background so the node stays responsive
     spinner = asyncio.create_task(ROSAsyncAdapter.spin_executor(executor, shutdown_event))
@@ -173,8 +200,7 @@ async def run():
             controller_starter.destroy_node()
         except Exception:
             pass
-    
 
-
-
-    
+if __name__ == "__main__":
+    rclpy.init()
+    asyncio.run(run())
