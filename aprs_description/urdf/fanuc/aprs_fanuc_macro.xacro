@@ -2,8 +2,6 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:macro name="aprs_fanuc" params="
     parent
-    camera_active
-    camera_type
 ">
 
     <!-- Inclue fanuc robot macro -->
@@ -32,8 +30,6 @@
     <xacro:vacuum_gripper
       parent="fanuc_gripper_link"
       prefix="fanuc"
-      use_camera="${camera_active}"
-      camera_type="${camera_type}"
       >
     </xacro:vacuum_gripper>
 

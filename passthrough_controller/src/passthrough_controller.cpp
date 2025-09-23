@@ -120,9 +120,15 @@ controller_interface::return_type PassthroughController::update(
   // Apply joint positions from real robot to simulated robot
   for (size_t i = 0; i < joint_names_.size(); ++i) {
     int joint_index = find_joint_index(joint_names_[i], msg);
+
+    int mult = 1;
+
+    if(joint_names_[i] == "joint_l" || joint_names_[i] == "joint_t" || joint_names_[i] == "joint_r"){
+      mult = -1;
+    }
     
     if (joint_index >= 0 && joint_index < static_cast<int>(msg.position.size())) {
-      if(!command_interfaces_[i].set_value(msg.position[joint_index])){
+      if(!command_interfaces_[i].set_value(msg.position[joint_index] * mult)){
         throw std::runtime_error("Unable to set joint");
       }
     } else {

@@ -14,17 +14,9 @@
   <xacro:include filename="$(find aprs_description)/urdf/fanuc/aprs_fanuc_macro.xacro"/>
   
   <xacro:arg name="fanuc_controller" default="$(find aprs_description)/config/robot_controllers.yaml" />
-
-  <xacro:arg name="camera_active_arg" default="false"/>
-  <xacro:property name="camera_active" value="$(arg camera_active_arg)" />
-
-  <xacro:arg name="camera_type_arg" default="rgb"/>
-  <xacro:property name="camera_type" value="$(arg camera_type_arg)" />
   
   <xacro:aprs_fanuc
     parent="aprs_fanuc_base_link"
-    camera_active="${camera_active}"
-    camera_type="${camera_type}"
     >
   </xacro:aprs_fanuc>
 

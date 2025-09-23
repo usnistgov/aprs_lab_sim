@@ -40,14 +40,5 @@
       </plugin>
     </gazebo>
 
-    <!-- Run gripper macro -->
-    <!-- <xacro:vacuum_gripper
-      parent="tool0"
-      prefix="ur"
-      use_camera="${camera_active}"
-      camera_type="${camera_type}"
-      >
-    </xacro:vacuum_gripper> -->
-
   </xacro:macro>
 </robot>

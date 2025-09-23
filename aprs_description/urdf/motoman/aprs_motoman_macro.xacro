@@ -2,8 +2,6 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
   <xacro:macro name="aprs_motoman" params="
     parent
-    camera_active
-    camera_type
 ">
 
     <!-- Inclue motoman robot macro -->
@@ -32,8 +30,6 @@
     <xacro:vacuum_gripper
       parent="motoman_gripper_link"
       prefix="motoman"
-      use_camera="${camera_active}"
-      camera_type="${camera_type}"
       >
     </xacro:vacuum_gripper>
 

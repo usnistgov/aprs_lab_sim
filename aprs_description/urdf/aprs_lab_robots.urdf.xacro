@@ -43,44 +43,20 @@
 
   <xacro:arg name="controllers" default="$(find aprs_description)/config/robot_controllers.yaml" />
 
-  <xacro:arg name="ur_camera_active_arg" default="false"/>
-  <xacro:property name="ur_camera_active" value="$(arg ur_camera_active_arg)" />
-
-  <xacro:arg name="ur_camera_type_arg" default="rgb"/>
-  <xacro:property name="ur_camera_type" value="$(arg ur_camera_type_arg)" />
-
   <xacro:aprs_ur
     parent="aprs_ur_base_link"
-    camera_active="${ur_camera_active}"
-    camera_type="${ur_camera_type}"
     >
   </xacro:aprs_ur>
 
-  <xacro:arg name="fanuc_camera_active_arg" default="false"/>
-  <xacro:property name="fanuc_camera_active" value="$(arg fanuc_camera_active_arg)" />
-
-  <xacro:arg name="fanuc_camera_type_arg" default="rgb"/>
-  <xacro:property name="fanuc_camera_type" value="$(arg fanuc_camera_type_arg)" />
-
   <xacro:aprs_fanuc
     parent="aprs_fanuc_base_link"
-    camera_active="${fanuc_camera_active}"
-    camera_type="${fanuc_camera_type}"
     >
   </xacro:aprs_fanuc>
 
   <xacro:aprs_franka></xacro:aprs_franka>
 
-  <xacro:arg name="motoman_camera_active_arg" default="false"/>
-  <xacro:property name="motoman_camera_active" value="$(arg motoman_camera_active_arg)" />
-
-  <xacro:arg name="motoman_camera_type_arg" default="rgb"/>
-  <xacro:property name="motoman_camera_type" value="$(arg motoman_camera_type_arg)" />
-
   <xacro:aprs_motoman
     parent="aprs_motoman_base_link"
-    camera_active="${motoman_camera_active}"
-    camera_type="${motoman_camera_type}"
     >
   </xacro:aprs_motoman>
 
