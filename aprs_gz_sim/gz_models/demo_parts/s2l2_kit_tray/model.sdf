@@ -5,18 +5,7 @@
     <allow_auto_disable>false</allow_auto_disable>
 
     <link name="s2l2_kit_tray">
-      <inertial>
-        <pose>0 0 0.02 0 0 1.57</pose>
-        <mass>0.7</mass>
-        <inertia>
-          <ixx>0.00108</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.00024</iyy>
-          <iyz>0</iyz>
-          <izz>0.00113</izz>
-        </inertia>
-      </inertial>
+      <inertial auto="true"/>
       
       <visual name="s2l2_kit_tray">
         <geometry>
@@ -37,7 +26,7 @@
             <uri>model://demo_parts/s2l2_kit_tray/meshes/s2l2_kit_tray.stl</uri>
           </mesh>
         </geometry>
-        <max_contacts>20</max_contacts>
+        <max_contacts>5</max_contacts>
         <surface>
           <contact>
             <ode>

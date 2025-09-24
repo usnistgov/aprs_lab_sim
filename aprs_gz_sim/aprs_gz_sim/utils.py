@@ -65,7 +65,7 @@ def convert_pi_string_to_float(s: str) -> float:
     else:
         return value
 
-def quaternion_from_euler(roll, pitch, yaw):
+def quaternion_from_euler(roll, pitch, yaw) -> list[float]:
     cy = math.cos(yaw * 0.5)
     sy = math.sin(yaw * 0.5)
     cp = math.cos(pitch * 0.5)
@@ -73,7 +73,7 @@ def quaternion_from_euler(roll, pitch, yaw):
     cr = math.cos(roll * 0.5)
     sr = math.sin(roll * 0.5)
 
-    q = [0] * 4
+    q = [0.0] * 4
     q[0] = cy * cp * cr + sy * sp * sr # type: ignore
     q[1] = cy * cp * sr - sy * sp * cr # type: ignore
     q[2] = sy * cp * sr + cy * sp * cr # type: ignore
@@ -146,15 +146,22 @@ def multiply_pose(p1: Pose, p2: Pose) -> Pose:
 
 def rpy_from_quaternion(q: Quaternion) -> Tuple[float, float, float]:
     ''' 
-    Use KDL to convert a quaternion to euler angles roll, pitch, yaw.
+    Converts quaternion to rpy
     Args:
         q (Quaternion): quaternion to convert
     Returns:
         Tuple[float, float, float]: roll, pitch, yaw
     '''
-    
+
     R = PyKDL.Rotation.Quaternion(q.x, q.y, q.z, q.w)
     return R.GetRPY()
+
+    
+    # roll = math.atan2(2*(q.w*q.x + q.y*q.z), 1-2*(q.x**2 + q.y**2))
+    # pitch = math.asin(2*(q.w*q.y - q.z*q.x))
+    # yaw = math.atan2(2*(q.w*q.z + q.x*q.y), 1-2*(q.y**2 + q.z**2))
+
+    # return (roll, pitch, yaw)
 
 def build_pose(x,y,z,q : Quaternion)->Pose:
     p = Pose()
@@ -194,7 +201,7 @@ def rad_to_deg(radians: float) -> float:
         float: Value in degrees
     '''
     
-    return radians * math.pi/180
+    return radians * 180/math.pi
 
 T = TypeVar('T')
 

@@ -473,7 +473,7 @@ class EnvironmentStartup(Node):
                         slot_size = "medium"
                     else:
                         slot_size = "large"
-                    self.spawn_gear(slot_size, "green", [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.02], tray_name+f"_tray_{self.tray_count}")
+                    self.spawn_gear(slot_size, "green", [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.03], tray_name+f"_tray_{self.tray_count}")
                     
                 else:
                     self.get_logger().error(f"Slot {slot} does not exist in tray {tray_name}_tray")

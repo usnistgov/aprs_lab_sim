@@ -5,18 +5,7 @@
     <allow_auto_disable>false</allow_auto_disable>
 
     <link name="medium_gear_tray">
-      <inertial>
-        <pose>0 0 0.02 0 0 1.57</pose>
-        <mass>0.7</mass>
-        <inertia>
-          <ixx>0.00108</ixx>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyy>0.00024</iyy>
-          <iyz>0</iyz>
-          <izz>0.00113</izz>
-        </inertia>
-      </inertial>
+      <inertial auto="true"/>
       
       <visual name="medium_gear_tray">
         <geometry>
@@ -31,27 +20,14 @@
       </visual>
 
       <collision name="medium_gear_tray_collision">
+        <density>20000</density>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://demo_parts/medium_gear_tray/meshes/medium_gear_part_tray.stl</uri>
           </mesh>
         </geometry>
-        <max_contacts>20</max_contacts>
-        <surface>
-          <contact>
-            <ode>
-              <max_vel>0.0</max_vel>
-              <min_depth>0.1</min_depth>
-            </ode>
-          </contact>
-          <friction>
-            <ode>
-              <mu>1000</mu>
-              <mu2>1000</mu2>
-            </ode>
-          </friction>
-        </surface>
+        <max_contacts>5</max_contacts>
       </collision>
     </link>
   </model>
