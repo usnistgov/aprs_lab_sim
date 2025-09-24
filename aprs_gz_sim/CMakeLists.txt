@@ -59,6 +59,7 @@ install(PROGRAMS
   nodes/seperate_load_controllers.py
   nodes/clone_real_world_node.py
   nodes/dummy_motoman_joints_publisher.py
+  nodes/dummy_trays_publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

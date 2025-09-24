@@ -6,6 +6,8 @@ from rclpy.node import Node
 from controller_manager_msgs.srv import SwitchController
 from std_msgs.msg import Bool
 
+from time import sleep
+
 from math import pi
 from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
@@ -25,16 +27,30 @@ class CloneNode(Node):
         
         self.trays_spawned = [self.fanuc_trays_spawned, self.motoman_trays_spawned, self.teach_trays_spawned]
         
-        vision_quaternion = quaternion_from_euler(0, 0, pi/4)
-        vision_orientation = Quaternion()
-        vision_orientation.w = vision_quaternion[0]
-        vision_orientation.x = vision_quaternion[1]
-        vision_orientation.y = vision_quaternion[2]
-        vision_orientation.z = vision_quaternion[3]
+        fanuc_vision_quaternion = quaternion_from_euler(0, math.pi, math.pi)
+        fanuc_orientation = Quaternion()
+        fanuc_orientation.w = fanuc_vision_quaternion[0]
+        fanuc_orientation.x = fanuc_vision_quaternion[1]
+        fanuc_orientation.y = fanuc_vision_quaternion[2]
+        fanuc_orientation.z = fanuc_vision_quaternion[3]
 
-        self.fanuc_vision_pose_ = build_pose(-1.0, 0.75 - 0.5, 0.9, vision_orientation)
-        self.motoman_vision_pose_ = build_pose(0.0, 0.75 - 0.5, 0.9, vision_orientation)
-        self.teach_vision_pose_ = build_pose(-1.95505, -2.181225 - 0.5, 0.77, vision_orientation)
+        motoman_vision_quaternion = quaternion_from_euler(0, 0, math.pi)
+        motoman_orientation = Quaternion()
+        motoman_orientation.w = motoman_vision_quaternion[0]
+        motoman_orientation.x = motoman_vision_quaternion[1]
+        motoman_orientation.y = motoman_vision_quaternion[2]
+        motoman_orientation.z = motoman_vision_quaternion[3]
+        
+        teach_vision_quaternion = quaternion_from_euler(0, 0, math.pi)
+        teach_orientation = Quaternion()
+        teach_orientation.w = teach_vision_quaternion[0]
+        teach_orientation.x = teach_vision_quaternion[1]
+        teach_orientation.y = teach_vision_quaternion[2]
+        teach_orientation.z = teach_vision_quaternion[3]
+
+        self.fanuc_vision_pose_ = build_pose(-0.7, 1.2 - 0.5, 0.9, fanuc_orientation)
+        self.motoman_vision_pose_ = build_pose(0.0, 0.75 - 0.5, 0.9, motoman_orientation)
+        self.teach_vision_pose_ = build_pose(-1.5, -1.4 - 0.5, 0.79, teach_orientation)
         
         fanuc_trays_info_sub = self.create_subscription(Trays, '/fanuc/table_trays_info', self.update_fanuc_trays, 10)
         motoman_trays_info_sub = self.create_subscription(Trays, '/motoman/table_trays_info', self.update_motoman_trays, 10)

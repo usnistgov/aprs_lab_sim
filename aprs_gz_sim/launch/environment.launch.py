@@ -62,12 +62,19 @@ def launch_setup(context, *args, **kwargs):
         ],
         output="screen",
     )
+
+    clone_real_world_node = Node(
+        package='aprs_gz_sim',
+        executable='clone_real_world_node.py',
+        output="screen"
+    )
     
     return [
         gz,
         combined_robots,
         seperate_robots,
-        # spawn_part_node,
+        clone_real_world_node,
+        spawn_part_node,
         # environment_startup_node,
         gz_sim_bridge
     ]
