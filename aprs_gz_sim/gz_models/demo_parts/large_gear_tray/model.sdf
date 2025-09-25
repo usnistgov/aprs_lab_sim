@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <model name="large_gear_tray">
-    <static>false</static>
+    <static>true</static>
     <allow_auto_disable>false</allow_auto_disable>
 
-    <link name="large_gear_tray">
+    <link name="base_link">
       <inertial auto="true"/>
       
-      <visual name="large_gear_tray">
+      <visual name="visual">
         <geometry>
           <mesh>
             <uri>model://demo_parts/large_gear_tray/meshes/large_gear_part_tray.stl</uri>
@@ -19,7 +19,7 @@
         </material>
       </visual>
 
-      <collision name="large_gear_tray_collision">
+      <collision name="collision">
         <density>20000</density>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
@@ -30,8 +30,43 @@
             <size> 0.210 0.138 0.015 </size>
           </box> -->
         </geometry>
-        <max_contacts>5</max_contacts>
       </collision>
     </link>
+
+    <link name="slot_1">
+      <inertial auto="true"/>
+      <collision name="collision">
+        <density>1</density>
+        <pose>-0.052 0.06 -0.012 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="slot_2">
+      <inertial auto="true"/>
+      <collision name="collision">
+        <density>1</density>
+        <pose>0.052 0.06 -0.012 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="slot_1_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>slot_1</child>
+    </joint>
+
+    <joint name="slot_2_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>slot_2</child>
+    </joint>
   </model>
 </sdf>

@@ -301,7 +301,7 @@ class EnvironmentStartup(Node):
         color_string = str(r/255) + " " + str(g/255) + " " + str(b/255) + " 1" 
 
         for elem in xml.find('model').find('link').findall('visual'): # type: ignore
-            if elem.attrib['name'] == "base":
+            if elem.attrib['name'] == "visual":
                 elem.find("material").find("ambient").text = color_string # type: ignore
                 elem.find("material").find("diffuse").text = color_string # type: ignore
 
@@ -349,7 +349,7 @@ class EnvironmentStartup(Node):
         color_string = str(r/255) + " " + str(g/255) + " " + str(b/255) + " 1" 
 
         for elem in xml.find('model').find('link').findall('visual'): # type: ignore
-            if elem.attrib['name'] == gear_size:
+            if elem.attrib['name'] == "visual":
                 elem.find("material").find("ambient").text = color_string # type: ignore
                 elem.find("material").find("diffuse").text = color_string # type: ignore
 
@@ -410,7 +410,7 @@ class EnvironmentStartup(Node):
         color_string = str(r/255) + " " + str(g/255) + " " + str(b/255) + " 1" 
 
         for elem in xml.find('model').find('link').findall('visual'): # type: ignore
-            if elem.attrib['name'] == tray_name:
+            if elem.attrib['name'] == "visual":
                 elem.find("material").find("ambient").text = color_string # type: ignore
                 elem.find("material").find("diffuse").text = color_string # type: ignore
 

@@ -4,7 +4,7 @@
   <link name="world"/>
 
   <joint name = "franka_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "-1.3145625 -1.375 0.8397875"/>
+    <origin rpy = "0 0 0" xyz = "-1.3145625 -1.375 0.85"/>
     <parent link = "world"/>
     <child link = "aprs_franka_base_link"/>
   </joint>

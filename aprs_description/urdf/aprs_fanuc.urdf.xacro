@@ -6,7 +6,7 @@
   <link name="aprs_fanuc_base_link"/>
 
   <joint name = "fanuc_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "-0.5222875 -0.073025 0.84455"/>
+    <origin rpy = "0 0 0" xyz = "-0.5222875 -0.073025 0.88"/>
     <parent link = "world"/>
     <child link = "aprs_fanuc_base_link"/>
   </joint>

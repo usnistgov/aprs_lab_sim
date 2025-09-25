@@ -24,8 +24,6 @@ class ControllerStarter(Node):
     def __init__(self):
         super().__init__("controller_starter_node")
 
-        self.get_logger().info("Inside CONTROLLER STARTER" + "\n"*100)
-
         sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
         self.set_parameters([sim_time_param])
 
@@ -38,8 +36,6 @@ class ControllerStarter(Node):
             self.mirror_env = raw_mirror
         else:
             self.mirror_env = str(raw_mirror).lower() == 'true'
-
-        self.get_logger().info(f"{self.mirror_env}" +"\n"*25)
 
         base_controllers = ['joint_state_broadcaster', 'joint_trajectory_controller']
         mimic_controller = 'passthrough_controller'

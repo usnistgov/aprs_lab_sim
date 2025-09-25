@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <model name="m2l1_kit_tray">
-    <static>false</static>
+    <static>true</static>
     <allow_auto_disable>false</allow_auto_disable>
 
-    <link name="m2l1_kit_tray">
+    <link name="base_link">
       <inertial auto="true"/>
       
-      <visual name="m2l1_kit_tray">
+      <visual name="visual">
         <geometry>
           <mesh>
             <uri>model://demo_parts/m2l1_kit_tray/meshes/m2l1_kit_tray.stl</uri>
@@ -19,7 +19,7 @@
         </material>
       </visual>
 
-      <collision name="m2l1_kit_tray_collision">
+      <collision name="collision">
         <density>20000</density>
         <pose>0 0 0 0 0 0</pose>
         <geometry>
@@ -27,8 +27,61 @@
             <uri>model://demo_parts/m2l1_kit_tray/meshes/m2l1_kit_tray.stl</uri>
           </mesh>
         </geometry>
-        <max_contacts>5</max_contacts>
       </collision>
     </link>
+
+    <link name="lg_1">
+      <inertial auto="true"/>
+      <collision name="collision">
+        <density>1</density>
+        <pose>0 -0.075 -0.012 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="mg_1">
+      <inertial auto="true"/>
+      <collision name="collision">
+        <density>1</density>
+        <pose>-0.065 0 -0.012 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="mg_2">
+      <inertial auto="true"/>
+      <collision name="collision">
+        <density>1</density>
+        <pose>0.065 0 -0.012 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="lg_1_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>lg_1</child>
+    </joint>
+
+    <joint name="mg_1_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>mg_1</child>
+    </joint>
+
+    <joint name="mg_2_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>mg_2</child>
+    </joint>
   </model>
 </sdf>

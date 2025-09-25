@@ -4,10 +4,10 @@
     <static>false</static>
     <allow_auto_disable>false</allow_auto_disable>
 
-    <link name="small_gear">
+    <link name="base_link">
       <inertial auto="true"/>
       
-      <visual name="small_gear_visual">
+      <visual name="visual">
         <geometry>
           <mesh>
             <uri>model://demo_parts/small_gear/meshes/small_gear.stl</uri>
@@ -19,15 +19,24 @@
         </material>
       </visual>
 
-      <collision name="small_gear_collision">
+      <collision name="stem">
         <density>10000</density>
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 -0.005 0 0 0</pose>
         <geometry>
-          <mesh>
-            <uri>model://demo_parts/small_gear/meshes/small_gear.stl</uri>
-          </mesh>
+          <cylinder>
+            <radius>0.00385</radius>
+            <length>0.030</length>
+          </cylinder>
         </geometry>
-        <max_contacts>5</max_contacts>
+      </collision>
+      <collision name="collision-disk">
+        <pose>0 0 -0.025 0 0 0</pose>
+        <density>1</density>
+        <geometry>
+          <box>
+            <size>0.02 0.02 0.008</size>
+          </box>
+        </geometry>
       </collision>
     </link>
   </model>
