@@ -5,7 +5,7 @@
 simulation:
   controller_manager:
     ros__parameters:
-      update_rate: 1000
+      update_rate: 200
 
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
@@ -36,7 +36,7 @@ simulation:
       state_interfaces:
         - position
         - velocity
-      state_publish_rate: 1000.0
+      state_publish_rate: 100.0
       action_monitor_rate: 20.0
       allow_partial_joints_goal: false
       constraints:
@@ -64,7 +64,7 @@ simulation:
         state_interfaces:
           - position
           - velocity
-        state_publish_rate: 1000.0
+        state_publish_rate: 100.0
         action_monitor_rate: 20.0
         allow_partial_joints_goal: false
 
@@ -83,7 +83,7 @@ simulation:
         state_interfaces:
           - position
           - velocity
-        state_publish_rate: 1000.0
+        state_publish_rate: 100.0
         action_monitor_rate: 20.0
         allow_partial_joints_goal: false
 
@@ -101,7 +101,7 @@ simulation:
         state_interfaces:
           - position
           - velocity
-        state_publish_rate: 1000.0
+        state_publish_rate: 100.0
         action_monitor_rate: 20.0
         allow_partial_joints_goal: false
         constraints:
@@ -121,7 +121,7 @@ simulation:
 simulation/fanuc:
   controller_manager:
     ros__parameters:
-      update_rate: 1000 # Hz
+      update_rate: 200 # Hz
 
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
@@ -158,7 +158,7 @@ simulation/fanuc:
       state_interfaces:
         - position
         - velocity
-      state_publish_rate: 1000.0
+      state_publish_rate: 100.0
       action_monitor_rate: 20.0
       allow_partial_joints_goal: false
       constraints:
@@ -174,7 +174,7 @@ simulation/fanuc:
 simulation/franka:
   controller_manager:
     ros__parameters:
-      update_rate: 1000 # Hz
+      update_rate: 200 # Hz
     
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
@@ -196,14 +196,14 @@ simulation/franka:
         - position
       state_interfaces:
         - position
-      state_publish_rate: 1000.0
+      state_publish_rate: 100.0
       action_monitor_rate: 20.0
       allow_partial_joints_goal: false
 
 simulation/motoman:
   controller_manager:
     ros__parameters:
-      update_rate: 1000 # Hz
+      update_rate: 200 # Hz
     
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
@@ -242,14 +242,14 @@ simulation/motoman:
       state_interfaces:
         - position
         - velocity
-      state_publish_rate: 1000.0
+      state_publish_rate: 100.0
       action_monitor_rate: 20.0
       allow_partial_joints_goal: false
 
 simulation/ur:
   controller_manager:
     ros__parameters:
-      update_rate: 1000 # Hz
+      update_rate: 200 # Hz
     
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
@@ -271,7 +271,7 @@ simulation/ur:
       state_interfaces:
         - position
         - velocity
-      state_publish_rate: 1000.0
+      state_publish_rate: 100.0
       action_monitor_rate: 20.0
       allow_partial_joints_goal: false
       constraints:

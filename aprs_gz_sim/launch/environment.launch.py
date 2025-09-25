@@ -74,7 +74,7 @@ def launch_setup(context, *args, **kwargs):
         combined_robots,
         seperate_robots,
         clone_real_world_node,
-        spawn_part_node,
+        # spawn_part_node,
         # environment_startup_node,
         gz_sim_bridge
     ]

@@ -8,6 +8,7 @@ find_package(gz-cmake3 REQUIRED)
 find_package(gz-sim8 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(conveyor_interfaces REQUIRED)
+find_package(aprs_interfaces REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   ament_cmake
@@ -17,6 +18,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   gz-sim8
   rclcpp
   conveyor_interfaces
+  aprs_interfaces
 )
 
 # Conveyor plugin
@@ -28,6 +30,8 @@ ament_target_dependencies(ConveyorPlugin
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
+# Gear plugin
+
 add_library(GearPlugin SHARED src/gear_plugin.cpp)
 target_include_directories(GearPlugin PUBLIC include)
 
@@ -35,15 +39,26 @@ ament_target_dependencies(GearPlugin
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
+# Spawn part
+
+add_library(SpawnPart SHARED src/spawn_part.cpp)
+target_include_directories(SpawnPart PUBLIC include)
+
+ament_target_dependencies(SpawnPart
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
 ament_export_libraries(
   ConveyorPlugin
   GearPlugin
+  SpawnPart
 )
 
 install(
   TARGETS
     ConveyorPlugin
     GearPlugin
+    SpawnPart
   DESTINATION 
     lib/${PROJECT_NAME}
 )

@@ -26,10 +26,6 @@ foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
 
-install(DIRECTORY include/
-  DESTINATION include
-)
-
 install(DIRECTORY
   launch
   gz_models
@@ -38,20 +34,6 @@ install(DIRECTORY
 )
 
 ament_python_install_package(${PROJECT_NAME} SCRIPTS_DESTINATION lib/${PROJECT_NAME})
-
-add_executable(spawn_part src/spawn_part.cpp)
-target_include_directories(spawn_part PRIVATE include)
-
-target_link_libraries(spawn_part
-  gz-msgs10::core
-  gz-transport13::core
-)
-
-ament_target_dependencies(spawn_part ${THIS_PACKAGE_INCLUDE_DEPENDS})
-
-install(TARGETS spawn_part
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
-)
 
 install(PROGRAMS
   nodes/environment_startup_node.py

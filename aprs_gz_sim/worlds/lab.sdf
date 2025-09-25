@@ -14,8 +14,8 @@
     <plugin filename="gz-sim-physics-system"
         name="gz::sim::systems::Physics">
       <physics>
-        <real_time_update_rate>500</real_time_update_rate>
-        <iters>30</iters>  
+        <real_time_update_rate>250</real_time_update_rate>
+        <iters>20</iters>  
       </physics>
     </plugin>
 
@@ -151,5 +151,10 @@
       <pose>0 0 0 0 0 0</pose>
       <uri>model://teach_table</uri>
     </include>
+
+    <plugin
+      filename="libSpawnPart.so"
+      name="aprs_plugins::SpawnPartPlugin">
+    </plugin>
   </world>
 </sdf>

@@ -1,20 +1,66 @@
-#include <aprs_gz_sim/spawn_part.hpp>
+#include <gz/plugin/Register.hh>
+#include <gz/common/Console.hh>
+#include <aprs_plugins/spawn_part.hpp>
 
-SpawnPart::SpawnPart()
-    : Node("part_spawner") 
+#include <time.h>
+
+// Include a line in your source file for each interface implemented.
+GZ_ADD_PLUGIN(
+    aprs_plugins::SpawnPartPlugin,
+    gz::sim::System,
+    aprs_plugins::SpawnPartPlugin::ISystemConfigure)
+
+using namespace aprs_plugins;
+ 
+SpawnPartPlugin::~SpawnPartPlugin()
 {
-    spawn_part_srv_ = this->create_service<aprs_interfaces::srv::SpawnPart>(
-        "/spawn_part",
-        std::bind(&SpawnPart::spawn_part_cb_, this, std::placeholders::_1, std::placeholders::_2)
-    );
-
-    spawn_sensor_srv_ = this->create_service<aprs_interfaces::srv::SpawnSensor>(
-        "/spawn_sensor",
-        std::bind(&SpawnPart::spawn_sensor_cb_, this, std::placeholders::_1, std::placeholders::_2)
-    );
+  executor_->cancel();
+  thread_executor_spin_.join();
 }
 
-void SpawnPart::spawn_part_cb_(
+void SpawnPartPlugin::Configure(const gz::sim::Entity &_entity,
+                      const std::shared_ptr<const sdf::Element> &_sdf,
+                      gz::sim::EntityComponentManager &_ecm,
+                      gz::sim::EventManager &)
+{  
+  if (!rclcpp::ok()) {
+    rclcpp::init(0, nullptr);
+  }
+
+  std::string node_name = "spawn_part_ros_node";
+
+  _ros_node = rclcpp::Node::make_shared(node_name);
+
+  rclcpp::Parameter sim_time("use_sim_time", true);
+  _ros_node->set_parameter(sim_time);
+
+  std::cout << "NODE SET" << std::endl;
+  executor_ = std::make_shared<rclcpp::executors::MultiThreadedExecutor>();
+  executor_->add_node(_ros_node);
+
+  auto spin = [this](){
+    while(rclcpp::ok()){
+      executor_->spin_once();
+    }
+  };
+
+  thread_executor_spin_ = std::thread(spin);
+
+  gz_node = std::make_shared<gz::transport::Node>();
+
+  spawn_part_srv_ = _ros_node->create_service<aprs_interfaces::srv::SpawnPart>(
+      "/spawn_part",
+      std::bind(&SpawnPartPlugin::spawn_part_cb_, this, std::placeholders::_1, std::placeholders::_2)
+  );
+
+  spawn_sensor_srv_ = _ros_node->create_service<aprs_interfaces::srv::SpawnSensor>(
+      "/spawn_sensor",
+      std::bind(&SpawnPartPlugin::spawn_sensor_cb_, this, std::placeholders::_1, std::placeholders::_2)
+  );
+
+}
+
+void SpawnPartPlugin::spawn_part_cb_(
     const std::shared_ptr<aprs_interfaces::srv::SpawnPart::Request> request,
     std::shared_ptr<aprs_interfaces::srv::SpawnPart::Response> response
 ){
@@ -56,24 +102,20 @@ void SpawnPart::spawn_part_cb_(
 
     if (executed) {
         if (result && rep.data()) {
-        RCLCPP_INFO(this->get_logger(), "Requested creation of entity.");
+          gzmsg << "Requested creation of entity.";
         } else {
-        RCLCPP_ERROR(
-            this->get_logger(), "Failed request to create entity.\n %s",
-            req.DebugString().c_str());
+          gzerr << "Failed request to create entity.\n %s", req.DebugString();
         }
     } else {
-        RCLCPP_ERROR(
-        this->get_logger(), "Request to create entity from service [%s] timed out..\n %s",
-        service.c_str(), req.DebugString().c_str());
+        gzerr << "Request to create entity from service [%s] timed out..\n %s", service, req.DebugString();
         response->set__success(false);
         return;
     }
-    RCLCPP_INFO(this->get_logger(), "OK creation of entity.");
+    gzmsg << "OK creation of entity.";
     response->set__success(true);
 }
 
-void SpawnPart::spawn_sensor_cb_(
+void SpawnPartPlugin::spawn_sensor_cb_(
     const std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Request> request,
     std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Response> response
 ){
@@ -106,24 +148,20 @@ void SpawnPart::spawn_sensor_cb_(
 
     if (executed) {
         if (result && rep.data()) {
-        RCLCPP_INFO(this->get_logger(), "Requested creation of entity.");
+        gzmsg << "Requested creation of entity.";
         } else {
-        RCLCPP_ERROR(
-            this->get_logger(), "Failed request to create entity.\n %s",
-            req.DebugString().c_str());
+        gzerr << "Failed request to create entity.\n %s", req.DebugString();
         }
     } else {
-        RCLCPP_ERROR(
-        this->get_logger(), "Request to create entity from service [%s] timed out..\n %s",
-        service.c_str(), req.DebugString().c_str());
+        gzerr << "Request to create entity from service [%s] timed out..\n %s", service, req.DebugString();
         response->set__success(false);
         return;
     }
-    RCLCPP_INFO(this->get_logger(), "OK creation of entity.");
+    gzmsg << "OK creation of entity.";
     response->set__success(true);
 }
 
-std::vector<float> SpawnPart::get_rpy_from_quaternion(float x, float y, float z, float w){
+std::vector<float> SpawnPartPlugin::get_rpy_from_quaternion(float x, float y, float z, float w){
 
     float sinr_cosp = 2 * (w * x + y * z);
     float cosr_cosp = 1 - 2 * (x * x + y * y);
@@ -139,17 +177,4 @@ std::vector<float> SpawnPart::get_rpy_from_quaternion(float x, float y, float z,
     std::vector<float> rpy = {roll, pitch, yaw};
 
     return rpy;
-}
-
-int main(int argc, char *argv[]){
-  rclcpp::init(argc, argv);
-
-  auto spawn_part_node = std::make_shared<SpawnPart>();
-
-  rclcpp::executors::MultiThreadedExecutor executor;
-  executor.add_node(spawn_part_node);
-
-  executor.spin();
-
-  rclcpp::shutdown();
 }
