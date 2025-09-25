@@ -70,18 +70,7 @@ void SpawnPartPlugin::spawn_part_cb_(
     // Request message
     gz::msgs::EntityFactory req;
 
-    if (request->type.find("tray") != std::string::npos){
-        req.set_name(request->type + "_" + std::to_string(tray_count));
-        tray_count++;
-    }
-    else if (request->type.find("gear") != std::string::npos){
-        req.set_name(request->type + "_" + std::to_string(gear_count));
-        gear_count++;
-    }
-    else {
-        req.set_name(request->type + "_" + std::to_string(part_count));
-        part_count++;
-    }
+    req.set_name(request->name);
 
     // File
     req.set_sdf(request->xml);

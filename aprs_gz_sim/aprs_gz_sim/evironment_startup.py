@@ -355,7 +355,7 @@ class EnvironmentStartup(Node):
 
         return ET.tostring(xml, encoding="unicode")
     
-    def spawn_gear(self, gear_size: str, color: str, xyz: list[float], tray_name: Optional[str] = None):
+    def spawn_gear(self, name: str, gear_size: str, color: str, xyz: list[float], tray_name: Optional[str] = None):
         self.get_logger().info("INSIDE SPAWN GEAR")
         # while True:
         request = SpawnPart.Request()
@@ -369,6 +369,7 @@ class EnvironmentStartup(Node):
         
         gear_name = gear_size + "_gear"
         
+        request.name = name
         request.type = gear_name + suffix
         request.color = color
         
@@ -416,14 +417,15 @@ class EnvironmentStartup(Node):
 
         return ET.tostring(xml, encoding="unicode")
     
-    def spawn_tray(self, tray_name: str, color: str, xyz: list[float], rotation: float = 0.0, occupied_slots:list[str]=[]):
+    def spawn_tray(self, name: str, tray_type: str, color: str, xyz: list[float], rotation: float = 0.0, occupied_slots:list[tuple[str, str]]=[]):
         self.get_logger().info("INSIDE SPAWN TRAY")
         # while True:
         request = SpawnPart.Request()
         
-        tray_name = tray_name.replace("_tray", "")
+        tray_type = tray_type.replace("_tray", "")
         
-        request.type = tray_name + "_tray"
+        request.name = name
+        request.type = tray_type + "_tray"
         request.color = color
         
         new_part_pose = Pose()
@@ -460,23 +462,23 @@ class EnvironmentStartup(Node):
             occupied_slots = list(set(occupied_slots))
             if len(occupied_slots) > 0:
                 sleep(0.5)
-            for slot in occupied_slots:
-                if slot in self.gear_offsets_[tray_name+"_tray"].keys():
-                    slot_x, slot_y = self.gear_offsets_[tray_name+"_tray"][slot]
+            for name, slot in occupied_slots:
+                if slot in self.gear_offsets_[tray_type+"_tray"].keys():
+                    slot_x, slot_y = self.gear_offsets_[tray_type+"_tray"][slot]
                     self.get_logger().info(f"Slot x: {slot_x} slot_y: {slot_y}")
                     new_x = slot_x * math.cos(rad_rot) - slot_y * math.sin(rad_rot)
                     new_y = slot_x * math.sin(rad_rot) + slot_y * math.cos(rad_rot)
                     self.get_logger().info(f"New x: {new_x} new y: {new_y}")
-                    if "small" in tray_name or "sg" in slot:
+                    if "small" in tray_type or "sg" in slot:
                         slot_size = "small"
-                    elif "medium" in tray_name or "mg" in slot:
+                    elif "medium" in tray_type or "mg" in slot:
                         slot_size = "medium"
                     else:
                         slot_size = "large"
-                    self.spawn_gear(slot_size, "green", [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.03], tray_name+f"_tray_{self.tray_count}")
+                    self.spawn_gear(name, slot_size, "green", [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.03], tray_type+f"_tray_{self.tray_count}")
                     
                 else:
-                    self.get_logger().error(f"Slot {slot} does not exist in tray {tray_name}_tray")
+                    self.get_logger().error(f"Slot {slot} does not exist in tray {tray_type}_tray")
             self.tray_count+=1
     
     def publish_environment_status(self):

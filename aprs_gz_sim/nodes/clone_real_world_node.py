@@ -73,9 +73,9 @@ class CloneNode(Node):
             for slot in tray.slots:
                 slot: SlotInfo
                 if slot.occupied:
-                    occupied_slots.append("_".join(slot.name.split("_")[-2:]))
+                    occupied_slots.append((slot.name, "_".join(slot.name.split("_")[-2:])))
             
-            self.spawner_node.spawn_tray(tray_type, tray_color, xyz, rotation, occupied_slots)
+            self.spawner_node.spawn_tray(tray.name, tray_type, tray_color, xyz, rotation, occupied_slots)
         self.motoman_trays_spawned = True
 
         if all(self.trays_spawned):
@@ -101,9 +101,9 @@ class CloneNode(Node):
             for slot in tray.slots:
                 slot: SlotInfo
                 if slot.occupied:
-                    occupied_slots.append("_".join(slot.name.split("_")[-2:]))
+                    occupied_slots.append((slot.name, "_".join(slot.name.split("_")[-2:])))
             
-            self.spawner_node.spawn_tray(tray_type, tray_color, xyz, rotation, occupied_slots)
+            self.spawner_node.spawn_tray(tray.name, tray_type, tray_color, xyz, rotation, occupied_slots)
         self.fanuc_trays_spawned = True
 
         if all(self.trays_spawned):
@@ -115,6 +115,8 @@ class CloneNode(Node):
         
         all_trays: list[Tray] = msg.kit_trays + msg.part_trays # type: ignore
         
+        self.get_logger().info("All trays: " + str(all_trays))
+
         for tray in all_trays:
             world_pose = multiply_pose(self.teach_vision_pose_, tray.tray_pose.pose)
             
@@ -129,9 +131,9 @@ class CloneNode(Node):
             for slot in tray.slots:
                 slot: SlotInfo
                 if slot.occupied:
-                    occupied_slots.append("_".join(slot.name.split("_")[-2:]))
+                    occupied_slots.append((slot.name, "_".join(slot.name.split("_")[-2:])))
             
-            self.spawner_node.spawn_tray(tray_type, tray_color, xyz, rotation, occupied_slots)
+            self.spawner_node.spawn_tray(tray.name, tray_type, tray_color, xyz, rotation, occupied_slots)
         self.teach_trays_spawned = True
 
         if all(self.trays_spawned):
