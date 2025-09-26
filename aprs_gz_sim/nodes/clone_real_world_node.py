@@ -40,13 +40,13 @@ class CloneNode(Node):
         
         self.trays_spawned = [self.fanuc_trays_spawned, self.motoman_trays_spawned, self.teach_trays_spawned]
         
-        fanuc_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, 0.0))
-        motoman_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, math.pi))
+        fanuc_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, 0))
+        motoman_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, 0))
         teach_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, math.pi))
 
-        self.fanuc_vision_pose_ = build_pose(-0.3, 0.7 - 0.5, 0.9, fanuc_orientation)
-        self.motoman_vision_pose_ = build_pose(-0.3, 0.75 - 0.5, 0.9, motoman_orientation)
-        self.teach_vision_pose_ = build_pose(-2.25, -1.4 - 0.5, 0.76, teach_orientation)
+        self.fanuc_vision_pose_ = build_pose(-0.25, 0.575 - 0.5, 0.9, fanuc_orientation)
+        self.motoman_vision_pose_ = build_pose(0.35, 0.325 - 0.5, 0.9, motoman_orientation)
+        self.teach_vision_pose_ = build_pose(-2.35, -1.4 - 0.5, 0.76, teach_orientation)
         
         self.fanuc_trays_info_sub = self.create_subscription(Trays, '/fanuc/table_trays_info', self.update_fanuc_trays, 10)
         self.motoman_trays_info_sub = self.create_subscription(Trays, '/motoman/table_trays_info', self.update_motoman_trays, 10)
