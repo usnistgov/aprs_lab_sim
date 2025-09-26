@@ -48,10 +48,10 @@ class CloneNode(Node):
         self.motoman_vision_pose_ = build_pose(-0.3, 0.75 - 0.5, 0.9, motoman_orientation)
         self.teach_vision_pose_ = build_pose(-2.25, -1.4 - 0.5, 0.76, teach_orientation)
         
-        fanuc_trays_info_sub = self.create_subscription(Trays, '/fanuc/table_trays_info', self.update_fanuc_trays, 10)
-        motoman_trays_info_sub = self.create_subscription(Trays, '/motoman/table_trays_info', self.update_motoman_trays, 10)
-        teach_trays_info_sub = self.create_subscription(Trays, '/teach/table_trays_info', self.update_teach_trays, 10)
-        
+        self.fanuc_trays_info_sub = self.create_subscription(Trays, '/fanuc/table_trays_info', self.update_fanuc_trays, 10)
+        self.motoman_trays_info_sub = self.create_subscription(Trays, '/motoman/table_trays_info', self.update_motoman_trays, 10)
+        self.teach_trays_info_sub = self.create_subscription(Trays, '/teach/table_trays_info', self.update_teach_trays, 10)
+
     def update_motoman_trays(self, msg: Trays):
         if self.motoman_trays_spawned:
             return
@@ -78,6 +78,7 @@ class CloneNode(Node):
             self.spawner_node.spawn_tray(tray.name, tray_type, tray_color, xyz, rotation, occupied_slots)
         self.motoman_trays_spawned = True
 
+        self.destroy_subscription(self.motoman_trays_info_sub)
         if all(self.trays_spawned):
             self.spawner_node.environment_ready()
     
@@ -106,6 +107,7 @@ class CloneNode(Node):
             self.spawner_node.spawn_tray(tray.name, tray_type, tray_color, xyz, rotation, occupied_slots)
         self.fanuc_trays_spawned = True
 
+        self.destroy_subscription(self.fanuc_trays_info_sub)
         if all(self.trays_spawned):
             self.spawner_node.environment_ready()
             
@@ -134,6 +136,7 @@ class CloneNode(Node):
             self.spawner_node.spawn_tray(tray.name + "_teach", tray_type, tray_color, xyz, rotation, occupied_slots)
         self.teach_trays_spawned = True
 
+        self.destroy_subscription(self.teach_trays_info_sub)
         if all(self.trays_spawned):
             self.spawner_node.environment_ready()
 
