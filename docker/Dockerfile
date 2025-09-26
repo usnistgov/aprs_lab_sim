@@ -18,14 +18,13 @@ ENV GZ_SIM_SYSTEM_PLUGIN_PATH=/home/user_name/aprs_ws/install/gz_ros2_control/li
 ENV GZ_VERSION=harmonic
 
 RUN source /opt/ros/jazzy/setup.bash && \
-    sudo apt-get update -qq && \
+    sudo apt-get update && \
     sudo apt-get install lsb-release gnupg python3-pip python3-setuptools wget ros-jazzy-ur-description ros-jazzy-gz-ros2-control ros-jazzy-ros-gz-interfaces -y && \
     sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
     sudo apt-get update -qq && \
     sudo apt-get -y install gz-harmonic && \
     git clone https://github.com/usnistgov/aprs_lab_sim.git src/aprs_lab_sim && \
-    git clone https://github.com/jfernandez37/ariac_gz_plugins.git src/ariac_gz_plugins -b jazzy && \
     git clone https://github.com/usnistgov/aprs-ros-conveyor.git src/aprs_ros_conveyor -b main && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src -y -r && \
