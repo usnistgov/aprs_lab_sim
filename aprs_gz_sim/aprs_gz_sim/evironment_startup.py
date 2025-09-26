@@ -462,7 +462,7 @@ class EnvironmentStartup(Node):
             occupied_slots = list(set(occupied_slots))
             if len(occupied_slots) > 0:
                 sleep(0.5)
-            for name, slot in occupied_slots:
+            for gear_name, slot in occupied_slots:
                 if slot in self.gear_offsets_[tray_type+"_tray"].keys():
                     slot_x, slot_y = self.gear_offsets_[tray_type+"_tray"][slot]
                     self.get_logger().info(f"Slot x: {slot_x} slot_y: {slot_y}")
@@ -475,7 +475,14 @@ class EnvironmentStartup(Node):
                         slot_size = "medium"
                     else:
                         slot_size = "large"
-                    self.spawn_gear(name, slot_size, "green", [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.03], tray_type+f"_tray_{self.tray_count}")
+                    
+                    self.spawn_gear(
+                        gear_name + ("teach" if name.endswith("teach") else ""), 
+                        slot_size, 
+                        "green", 
+                        [xyz[0]+new_x, xyz[1]+new_y, xyz[2]+0.03], 
+                        tray_type+f"_tray_{self.tray_count}"
+                    )
                     
                 else:
                     self.get_logger().error(f"Slot {slot} does not exist in tray {tray_type}_tray")
