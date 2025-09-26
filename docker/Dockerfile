@@ -19,16 +19,14 @@ ENV GZ_VERSION=harmonic
 
 RUN source /opt/ros/jazzy/setup.bash && \
     sudo apt-get update -qq && \
-    sudo apt-get install lsb-release gnupg python3-pip python3-setuptools wget ros-jazzy-ur-description ros-jazzy-gz-ros2-control -y && \
+    sudo apt-get install lsb-release gnupg python3-pip python3-setuptools wget ros-jazzy-ur-description ros-jazzy-gz-ros2-control ros-jazzy-ros-gz-interfaces -y && \
     sudo wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null && \
     sudo apt-get update -qq && \
     sudo apt-get -y install gz-harmonic && \
-    git clone https://github.com/ros-controls/gz_ros2_control.git src/gz_pkgs/gz_ros2_control -b jazzy && \
-    git clone https://github.com/usnistgov/APRS_ros2_demo_sim.git src/APRS_ros2_demo_sim -b jazzy && \
+    git clone https://github.com/usnistgov/aprs_lab_sim.git src/aprs_lab_sim && \
     git clone https://github.com/jfernandez37/ariac_gz_plugins.git src/ariac_gz_plugins -b jazzy && \
     git clone https://github.com/usnistgov/aprs-ros-conveyor.git src/aprs_ros_conveyor -b main && \
-    git clone https://github.com/jfernandez37/moveit_test src/moveit_test -b individual_moveit_configs && \
     rosdep update && \
     rosdep install --from-paths src --ignore-src -y -r && \
     source /opt/ros/jazzy/setup.bash && \
@@ -36,4 +34,4 @@ RUN source /opt/ros/jazzy/setup.bash && \
 
 RUN echo 'source /home/user_name/aprs_ws/install/setup.bash' >> /home/user_name/.bashrc
 RUN echo 'source /opt/ros/jazzy/setup.bash' >> /home/user_name/.bashrc
-RUN echo 'export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/home/user_name/aprs_ws/install/aprs_gz_sim/share/aprs_gz_sim/models/:/opt/ros/jazzy/share' >> /home/user_name/.bashrc
+RUN echo 'export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/opt/ros/jazzy/share' >> /home/user_name/.bashrc
