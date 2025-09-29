@@ -5,30 +5,20 @@ from rclpy.node import Node
 
 import math
 
-from geometry_msgs.msg import Quaternion
-
-from controller_manager_msgs.srv import SwitchController
-from std_msgs.msg import Bool
-
-from time import sleep
-
-from math import pi
 from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
 from aprs_gz_sim.evironment_startup import EnvironmentStartup
 
-from aprs_gz_sim.utils import quaternion_from_euler, build_pose, multiply_pose, rad_to_deg, rpy_from_quaternion
-
-def quanernion_to_msg(q: list[float]):
-    q_ret = Quaternion()
-    q_ret.w = q[0]
-    q_ret.x = q[1]
-    q_ret.y = q[2]
-    q_ret.z = q[3]
-
-    return q_ret
+from aprs_gz_sim.utils import quaternion_from_euler, build_pose, multiply_pose, rad_to_deg, rpy_from_quaternion, quaternion_to_msg
 
 class CloneNode(Node):
+    """Node which listens to real-world tray topics and spawns equivalent
+    entities into the simulation environment.
+
+    The node subscribes to tray topics for fanuc, motoman and teach stations and
+    uses the EnvironmentStartup helper to spawn tray entities in the simulation
+    once tray information is received.
+    """
     tray_types_ = ["small_gear", "medium_gear", "large_gear", "m2l1_kit", "s2l2_kit"]
     def __init__(self):
         super().__init__('clone_node')
@@ -40,9 +30,9 @@ class CloneNode(Node):
         
         self.trays_spawned = [self.fanuc_trays_spawned, self.motoman_trays_spawned, self.teach_trays_spawned]
         
-        fanuc_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, 0))
-        motoman_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, 0))
-        teach_orientation = quanernion_to_msg(quaternion_from_euler(0, math.pi, math.pi))
+        fanuc_orientation = quaternion_to_msg(quaternion_from_euler(0, math.pi, 0))
+        motoman_orientation = quaternion_to_msg(quaternion_from_euler(0, math.pi, 0))
+        teach_orientation = quaternion_to_msg(quaternion_from_euler(0, math.pi, math.pi))
 
         self.fanuc_vision_pose_ = build_pose(-0.25, 0.575 - 0.5, 0.9, fanuc_orientation)
         self.motoman_vision_pose_ = build_pose(0.35, 0.325 - 0.5, 0.9, motoman_orientation)

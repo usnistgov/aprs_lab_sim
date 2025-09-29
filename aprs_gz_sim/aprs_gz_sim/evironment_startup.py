@@ -26,34 +26,6 @@ from geometry_msgs.msg import (
 from aprs_interfaces.srv import SpawnPart, SpawnSensor
 
 from ament_index_python.packages import get_package_share_directory
-
-
-
-class bcolors:
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    OKCYAN = "\033[96m"
-    OKGREEN = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BOLD = "\033[1m"
-    UNDERLINE = "\033[4m"
-
-class PartInfo:
-    part_heights = {
-        'battery': 0.04,
-        'sensor': 0.07,
-        'pump': 0.12,
-        'regulator': 0.07,
-    }
-
-    def __init__(self):
-        self.type = None
-        self.color = None
-        self.rotation = '0'
-        self.flipped = False
-        self.height = None
         
 class Error(Exception):
   def __init__(self, value: str):
@@ -104,15 +76,19 @@ class EnvironmentStartup(Node):
     
     def __init__(self):
         super().__init__("environment_startup_node")
+        """Helper node to spawn models, sensors and parts into the simulation.
+
+        This class wraps ROS/Gazebo spawn services and provides convenience
+        methods to read SDF/XML templates, adjust colors, and call the
+        appropriate spawn services for sensors, parts, gears and trays.
+        """
 
 
         latching_qos = QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL)
 
         self.env_ready = False
         self.environment_ready_publisher = self.create_publisher(BoolMsg, '/aprs_environment_ready', latching_qos)
-        
-        # self.bin_parts_pub_timer = self.create_timer(1.0, self.publish_environment_status)
-        
+                
         self.spawn_client = self.create_client(SpawnEntity, '/spawn_entity')
         
         self.part_count = 0
@@ -128,20 +104,27 @@ class EnvironmentStartup(Node):
         self.spawn_sensor_client = self.create_client(SpawnSensor, "/spawn_sensor")
 
     def read_yaml(self, path):
+        """Read a YAML file from disk and return the parsed object.
+
+        On parse failure an empty dict is returned and an error is logged.
+        """
         with open(path, "r") as stream:
             try:
                 return yaml.safe_load(stream)
             except yaml.YAMLError:
-                self.get_logger().error(bcolors.FAIL + "Unable to read configuration file" + bcolors.ENDC)
+                self.get_logger().error("Unable to read configuration file")
                 return {}   
 
     def get_advanced_logical_camera_xml(self, file_path, sensor_type, name = "camera_1"):
+        """Return an adjusted SDF/XML string for an advanced logical camera.
+
+        The function reads the camera SDF, rewrites topic and plugin fields to
+        use the provided name and returns the XML as a string.
+        """
         
         
         xml = ET.fromstring(self.get_sdf(file_path))
-        
-        # xml.find('model').find('link').find('sensor').find('visualize').text = str(False)
-                
+                        
         xml.find("model").find("link").find("sensor").find("topic").text = f"{name}_gz_topic" #type: ignore
                 
         xml.find("model").find("link").find("sensor").find("plugin").find("rostopic").text = f"{name}_ros_topic" #type: ignore
@@ -153,7 +136,6 @@ class EnvironmentStartup(Node):
         if sensor_type in ray_sensors:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('sensor_name').text = name #type: ignore
             plugin.find('frame_name').text = name + "_frame" #type: ignore
         
@@ -161,18 +143,20 @@ class EnvironmentStartup(Node):
         if sensor_type in cameras:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('camera_name').text = name #type: ignore
             plugin.find('frame_name').text = name + "_frame" #type: ignore
 
         return ET.tostring(xml, encoding="unicode")
 
     def get_rgb_camera_xml(self, file_path, sensor_type, name = "camera_1"):
+        """Return an adjusted SDF/XML string for an RGB camera sensor.
+
+        Adjusts ROS topic and plugin fields to use the provided name.
+        """
         
         
         xml = ET.fromstring(self.get_sdf(file_path))
         
-        # xml.find('model').find('link').find('sensor').find('visualize').text = str(False)
                 
         xml.find("model").find("link").find("sensor").find("topic").text = f"{name}_gz_topic" #type: ignore
                 
@@ -186,7 +170,6 @@ class EnvironmentStartup(Node):
         if sensor_type in ray_sensors:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('sensor_name').text = name #type: ignore
             plugin.find('frame_name').text = name + "_frame" #type: ignore
         
@@ -194,17 +177,18 @@ class EnvironmentStartup(Node):
         if sensor_type in cameras:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('camera_name').text = name #type: ignore
 
         return ET.tostring(xml, encoding="unicode")
 
     def get_rgbd_camera_xml(self, file_path, sensor_type, name = "camera_1"):
+        """Return an adjusted SDF/XML string for an RGB-D camera sensor.
+
+        Adjusts ROS topic and plugin fields to use the provided name.
+        """
         
         
         xml = ET.fromstring(self.get_sdf(file_path))
-        
-        # xml.find('model').find('link').find('sensor').find('visualize').text = str(False)
                 
         xml.find("model").find("link").find("sensor").find("topic").text = f"{name}_gz_topic" #type: ignore
                 
@@ -217,7 +201,6 @@ class EnvironmentStartup(Node):
         if sensor_type in ray_sensors:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('sensor_name').text = name #type: ignore
             plugin.find('frame_name').text = name + "_frame" #type: ignore
         
@@ -225,12 +208,19 @@ class EnvironmentStartup(Node):
         if sensor_type in cameras:
             plugin = xml.find('model').find('link').find('sensor').find('plugin') #type: ignore
 
-            # plugin.set('name', str(name + "_ros_plugin"))
             plugin.find('camera_name').text = name #type: ignore
 
         return ET.tostring(xml, encoding="unicode")
     
     def spawn_sensor(self, name: str, sensor_type: str, xyz: list[float], rpy: list[float]):
+        """Spawn a sensor model into the simulation via the SpawnSensor service.
+
+        Args:
+            name: Unique name for the spawned sensor.
+            sensor_type: Sensor model name (e.g. 'rgb_camera').
+            xyz: Position of the sensor as [x,y,z].
+            rpy: Orientation of the sensor as [roll,pitch,yaw].
+        """
         
         new_sensor_pose = Pose()
         new_sensor_pose.position.x = float(xyz[0])
@@ -269,6 +259,7 @@ class EnvironmentStartup(Node):
             self.get_logger().error("Error calling spawn_sensor service")
     
     def spawn_sensors(self):
+        """Read sensor configuration and spawn static sensors listed in the YAML."""
         sensor_file = os.path.join(get_package_share_directory("aprs_gz_sim"), "config", "sensors.yaml")
 
         sensor_config = self.read_yaml(sensor_file)
@@ -285,6 +276,10 @@ class EnvironmentStartup(Node):
                 self.spawn_sensor(name, sensor_type, sensor_xyz, sensor_rpy)
     
     def get_sdf(self, file_path: str) -> str:
+        """Read the contents of an SDF/XML file and return as string.
+
+        Returns an empty string on error.
+        """
         try:
             f = open(file_path, 'r')
             entity_xml = f.read()
@@ -294,6 +289,15 @@ class EnvironmentStartup(Node):
         return entity_xml
     
     def get_part_xml(self, p_type, p_color):
+        """Return an SDF/XML string for a part with the requested color applied.
+
+        Args:
+            p_type: Part type (folder name under gz_models/demo_parts).
+            p_color: Color key used to look up RGB values.
+
+        Returns:
+            SDF/XML string with color modifications applied.
+        """
         file_path = os.path.join(get_package_share_directory("aprs_gz_sim"), "gz_models", "demo_parts", p_type, "model.sdf")
         xml = ET.fromstring(self.get_sdf(file_path))
         
@@ -308,6 +312,13 @@ class EnvironmentStartup(Node):
         return ET.tostring(xml, encoding="unicode")
     
     def spawn_part(self, part_type: str, color: str, xyz: list[float]):
+        """Spawn a demo part into the simulation using the SpawnPart service.
+
+        Args:
+            part_type: The demo part type (e.g. 'battery', 'sensor').
+            color: Color key name to apply to the model.
+            xyz: Position vector [x,y,z].
+        """
         self.get_logger().info("INSIDE SPAWN PART")
         # while True:
         request = SpawnPart.Request()
@@ -341,6 +352,15 @@ class EnvironmentStartup(Node):
             self.get_logger().error("Error calling spawn_part service")
             
     def get_gear_xml(self, gear_size, color):
+        """Return an SDF/XML string for a gear with a color applied.
+
+        Args:
+            gear_size: Size key for demo gear (e.g. 'small_gear').
+            color: Color name to apply.
+
+        Returns:
+            Modified SDF/XML for the gear.
+        """
         file_path = os.path.join(get_package_share_directory("aprs_gz_sim"), "gz_models", "demo_parts", gear_size, "model.sdf")
         self.get_logger().info(file_path)
         xml = ET.fromstring(self.get_sdf(file_path))
@@ -356,8 +376,17 @@ class EnvironmentStartup(Node):
         return ET.tostring(xml, encoding="unicode")
     
     def spawn_gear(self, name: str, gear_size: str, color: str, xyz: list[float], tray_name: Optional[str] = None):
+        """Spawn a gear model into the simulation via SpawnPart service.
+
+        Args:
+            name: Base name for the spawned gear.
+            gear_size: The gear size/type.
+            color: Color key to apply.
+            xyz: Position vector [x,y,z].
+            tray_name: Optional tray suffix to append to the spawned part name.
+        """
         self.get_logger().info("INSIDE SPAWN GEAR")
-        # while True:
+
         request = SpawnPart.Request()
         
         suffix = ""
@@ -402,6 +431,15 @@ class EnvironmentStartup(Node):
             self.get_logger().info("\n"*5 + "Successfully spwned gear" + "\n"*5)
     
     def get_tray_xml(self, tray_name, color):
+        """Return an SDF/XML string for a tray model with the requested color.
+
+        Args:
+            tray_name: Name of the tray model folder under gz_models/demo_parts.
+            color: Color key used to look up RGB values from self.colors.
+
+        Returns:
+            A string containing the tray SDF/XML with modified material colors.
+        """
         self.get_logger().info("Tray Name: "+ tray_name)
         file_path = os.path.join(get_package_share_directory("aprs_gz_sim"), "gz_models", "demo_parts", tray_name, "model.sdf")
         self.get_logger().info(file_path)
@@ -418,8 +456,24 @@ class EnvironmentStartup(Node):
         return ET.tostring(xml, encoding="unicode")
     
     def spawn_tray(self, name: str, tray_type: str, color: str, xyz: list[float], rotation: float = 0.0, occupied_slots:list[tuple[str, str]]=[]):
+        """Spawn a tray model into the simulation and optionally spawn parts in slots.
+
+        This method constructs a SpawnPart request for the tray model, sets
+        its pose based on the provided xyz and rotation (degrees), calls the
+        spawn service, and if occupied_slots are provided will spawn gears
+        at the corresponding offsets.
+
+        Args:
+            name: Logical name for the spawned tray.
+            tray_type: Tray type string (e.g. 'm2l1_kit_tray').
+            color: Color key string to apply to the tray visuals.
+            xyz: Position vector [x,y,z].
+            rotation: Rotation about the tray's vertical axis in degrees.
+            occupied_slots: Optional list of tuples (gear_name, slot_key) that
+                indicate which gears should be spawned in which tray slots.
+        """
         self.get_logger().info("INSIDE SPAWN TRAY")
-        # while True:
+
         request = SpawnPart.Request()
         
         tray_type = tray_type.replace("_tray", "")
@@ -489,11 +543,21 @@ class EnvironmentStartup(Node):
             self.tray_count+=1
     
     def publish_environment_status(self):
+        """Publish the current environment ready status on the latching topic.
+
+        Publishes a std_msgs/Bool on '/aprs_environment_ready' using a
+        transient-local (latching) QoS so late-joining nodes receive the
+        current state.
+        """
         msg = BoolMsg()
         msg.data = self.env_ready
         self.environment_ready_publisher.publish(msg)
     
     def environment_ready(self):
+        """Mark the environment ready and publish the status.
+
+        Sets an internal flag and publishes the updated status message.
+        """
         self.env_ready = True
         self.publish_environment_status()
         

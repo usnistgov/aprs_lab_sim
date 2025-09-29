@@ -3,10 +3,7 @@
 import math
 
 import PyKDL
-from geometry_msgs.msg import (
-    Pose,
-    Quaternion
-)
+from geometry_msgs.msg import Pose, Quaternion
 
 import re
 import asyncio
@@ -17,55 +14,35 @@ from rclpy.task import Future
 from rclpy.client import Client
 from rclpy.executors import Executor
 
-
 def convert_pi_string_to_float(s: str) -> float:
-    """Takes a string that contains pi and evaluates the expression. Returns a float
-    Returns 0.0 if the expression cannot be evaluated"""
-    s=str(s)
-    value = 0.0
-    negative = False
+    """Parse simple expressions involving the token 'pi' and return a float.
 
-    if s.isdigit():
-        return float(s)
+    Supported patterns are like 'pi', '2pi', 'pi/2', '-3*pi/4'. If the input
+    cannot be parsed the function returns 0.0.
 
-    if s.find('pi') == -1:
-        # Return 0 if string does not contain pi
-        return value
+    Args:
+        s: Input string containing an expression with 'pi'.
 
-    if not s.find('-') == -1:
-        negative = True
-        s = s.replace('-', '')
-
-    split = s.split('pi')
-    if not len(split) == 2:
-        # Can't evaluate strings with multiple pi's, return 0
-        return value
-
-    before, after = split
-    if before and after:
-        before = before.replace('*', '')
-        if before.isdigit():
-            value = float(before) * math.pi
-        after = after.replace('/', '')
-        if after.isdigit():
-            value /= float(after)
-    elif before:
-        before = before.replace('*', '')
-        if before.isdigit():
-            value = float(before) * math.pi
-    elif after:
-        after = after.replace('/', '')
-        if after.isdigit():
-            value = math.pi / float(after)
-    else:
-        value = math.pi
-
-    if negative:
-        return -value
-    else:
-        return value
+    Returns:
+        The evaluated float value or 0.0 on parse failure.
+    """
+    try:
+        return float(eval(s, {"__builtins__": None}, {"pi": math.pi}))
+    except Exception:
+        return 0.0
 
 def quaternion_from_euler(roll, pitch, yaw) -> list[float]:
+    """Convert Euler angles (roll, pitch, yaw) into a quaternion list [w,x,y,z].
+
+    Args:
+        roll: rotation about X axis in radians.
+        pitch: rotation about Y axis in radians.
+        yaw: rotation about Z axis in radians.
+
+    Returns:
+        A list [w, x, y, z] representing the quaternion.
+    """
+
     cy = math.cos(yaw * 0.5)
     sy = math.sin(yaw * 0.5)
     cp = math.cos(pitch * 0.5)
@@ -82,6 +59,19 @@ def quaternion_from_euler(roll, pitch, yaw) -> list[float]:
     return q
 
 def pose_info(xyz: list, rpy: list) -> Pose:
+    """Build a ROS Pose message from string/float xyz and rpy lists.
+
+    This function accepts strings containing numeric values or simple pi
+    expressions (e.g. 'pi/2') and converts them to floats.
+
+    Args:
+        xyz: list of x,y,z values (str or float).
+        rpy: list of roll,pitch,yaw values (str or float).
+
+    Returns:
+        geometry_msgs.msg.Pose populated with the provided values.
+    """
+
     xyz_floats = []
     rpy_floats = []
     for s in xyz:
@@ -108,14 +98,17 @@ def pose_info(xyz: list, rpy: list) -> Pose:
     return pose
 
 def multiply_pose(p1: Pose, p2: Pose) -> Pose:
-    '''
-    Use KDL to multiply two poses together.
+    """Left-multiply two geometry_msgs Pose messages using PyKDL.
+
+    The returned Pose corresponds to the transform p1 * p2.
+
     Args:
-        p1 (Pose): Pose of the first frame
-        p2 (Pose): Pose of the second frame
+        p1: First pose (applied first).
+        p2: Second pose (applied second).
+
     Returns:
-        Pose: Pose of the resulting frame
-    '''
+        Pose: Resulting composed pose.
+    """
 
     o1 = p1.orientation
     frame1 = PyKDL.Frame(
@@ -145,25 +138,28 @@ def multiply_pose(p1: Pose, p2: Pose) -> Pose:
 
 
 def rpy_from_quaternion(q: Quaternion) -> Tuple[float, float, float]:
-    ''' 
-    Converts quaternion to rpy
+    """Convert a geometry_msgs Quaternion to roll, pitch, yaw angles.
+
     Args:
-        q (Quaternion): quaternion to convert
+        q: geometry_msgs.msg.Quaternion
+
     Returns:
-        Tuple[float, float, float]: roll, pitch, yaw
-    '''
+        (roll, pitch, yaw) in radians.
+    """
 
     R = PyKDL.Rotation.Quaternion(q.x, q.y, q.z, q.w)
     return R.GetRPY()
 
-    
-    # roll = math.atan2(2*(q.w*q.x + q.y*q.z), 1-2*(q.x**2 + q.y**2))
-    # pitch = math.asin(2*(q.w*q.y - q.z*q.x))
-    # yaw = math.atan2(2*(q.w*q.z + q.x*q.y), 1-2*(q.y**2 + q.z**2))
-
-    # return (roll, pitch, yaw)
-
 def build_pose(x,y,z,q : Quaternion)->Pose:
+    """Create a geometry_msgs Pose from position and quaternion values.
+
+    Args:
+        x,y,z: position coordinates.
+        q: geometry_msgs.msg.Quaternion instance for orientation.
+
+    Returns:
+        A populated Pose message.
+    """
     p = Pose()
     p.position.x = x
     p.position.y = y
@@ -171,35 +167,32 @@ def build_pose(x,y,z,q : Quaternion)->Pose:
     p.orientation = q
     return p
 
+def quaternion_to_msg(q: list[float]):
+    """Convert a quaternion list [w,x,y,z] into a geometry_msgs Quaternion.
 
-def rad_to_deg_str(radians: float) -> str:
-    '''
-    Converts radians to degrees in the domain [-PI, PI]
     Args:
-        radians (float): value in radians
-    Returns:
-        str: String representing the value in degrees
-    '''
-    
-    degrees = math.degrees(radians)
-    if degrees > 180:
-        degrees = degrees - 360
-    elif degrees < -180:
-        degrees = degrees + 360
+        q: sequence or list with four floats [w,x,y,z].
 
-    if -1 < degrees < 1:
-        degrees = 0 
-    
-    return f'{degrees:.0f}' + chr(176)
+    Returns:
+        geometry_msgs.msg.Quaternion
+    """
+    q_ret = Quaternion()
+    q_ret.w = q[0]
+    q_ret.x = q[1]
+    q_ret.y = q[2]
+    q_ret.z = q[3]
+
+    return q_ret
 
 def rad_to_deg(radians: float) -> float:
-    '''
-    Converts radians to degrees
+    """Convert radians to degrees (float).
+
     Args:
-        radians (float): Value in radians
+        radians: Angle in radians.
+
     Returns:
-        float: Value in degrees
-    '''
+        Angle in degrees.
+    """
     
     return radians * 180/math.pi
 
@@ -267,30 +260,3 @@ class ROSAsyncAdapter:
             return await asyncio.wait_for(future, timeout=timeout)
         except asyncio.TimeoutError:
             raise TimeoutError("Blocking function call timed out")
-
-
-def evaluate_pi_expression(expr) -> float:
-    if isinstance(expr, (int, float)):
-        return float(expr)
-
-    if isinstance(expr, str):
-        try:
-            # Remove spaces and prepare expression
-            expr = expr.replace(' ', '')
-            expr = re.sub(r'(\d)(pi)', r'\1*pi', expr)
-            
-            # Allow only valid characters/operators
-            if not re.fullmatch(r'[\d\.\+\-\*/\(\)pi]+', expr):
-                raise ValueError("Invalid characters in expression.")
-            
-            # Replace 'pi' with its float value
-            expr = expr.replace('pi', str(math.pi))
-
-            # Evaluate using eval with empty builtins
-            result = eval(expr, {"__builtins__": {}})
-            return float(result)
-
-        except Exception as e:
-            print(e)
-    
-    return 0.0

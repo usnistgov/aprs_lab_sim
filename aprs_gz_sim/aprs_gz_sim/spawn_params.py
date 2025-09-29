@@ -9,6 +9,16 @@ from aprs_gz_sim.utils import pose_info
 from ament_index_python.packages import get_package_share_directory
 
 class SpawnParams:
+    """Generic container for spawn parameters used by spawn helper classes.
+
+    Args:
+        name: Logical name for the spawned entity.
+        file_path: Optional path to an SDF/XML template.
+        xyz: Initial position vector.
+        rpy: Initial orientation (roll,pitch,yaw).
+        ns: Optional ROS namespace for the robot.
+        rf: Optional reference frame.
+    """
     def __init__(self, name, file_path=None, xyz=[0,0,0], rpy=[0,0,0], ns='', rf=''):
         self.name = name
         self.xml = ""
@@ -16,8 +26,13 @@ class SpawnParams:
         self.initial_pose = pose_info(xyz, rpy)
         self.robot_namespace = ns
         self.reference_frame = rf
+        # initialization of fields
     
     def get_sdf(self, file_path: str) -> str:
+        """Read an SDF/XML file and return its contents as a string.
+
+        Returns empty string on IO error.
+        """
         try:
             f = open(file_path, 'r')
             entity_xml = f.read()
@@ -27,6 +42,10 @@ class SpawnParams:
         return entity_xml
     
     def set_xml_from_file_path(self):
+        """Load the XML from the configured file_path into `self.xml`.
+
+        No-op if file read fails.
+        """
         try:
             f = open(self.file_path, 'r') # type: ignore
             self.xml = f.read()
@@ -35,6 +54,7 @@ class SpawnParams:
 
 
 class RobotSpawnParams(SpawnParams):
+    """Spawn parameters specialized for robot entities using URDF content."""
     def __init__(self, name, urdf, xyz=[0,0,0], rpy=[0,0,0]):
         super().__init__(name, xyz=xyz, rpy=rpy)
 
@@ -61,8 +81,13 @@ class PartSpawnParams(SpawnParams):
         self.color = color
 
         self.modify_xml()
-    
+
     def modify_xml(self):
+        """Modify the SDF/XML for this part to apply the configured color.
+
+        The method loads the template file and replaces visual material
+        ambient/diffuse entries with the requested color.
+        """
         if self.file_path is None:
             return
         
@@ -90,6 +115,7 @@ class TraySpawnParams(SpawnParams):
         self.modify_xml()
     
     def modify_xml(self):
+        """Customize the tray XML to set the marker mesh based on marker_id."""
         if self.file_path is None:
             return
         
