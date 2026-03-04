@@ -3,11 +3,13 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
-import math
 
 class JointStatePublisher(Node):
-    """
-    A simple ROS2 node that publishes a JointState message.
+    """A simple ROS 2 node that publishes a synthetic JointState topic.
+
+    This node is intended for testing. It publishes on
+    the topic '/motoman/joint_states' at a fixed timer that updates
+    a small internal joint_positions array.
     """
     def __init__(self):
         super().__init__('joint_state_publisher')
@@ -28,9 +30,10 @@ class JointStatePublisher(Node):
         self.get_logger().info('JointState Publisher node has been started.')
 
     def timer_callback(self):
-        """
-        Callback function for the timer. This is where the JointState message is
-        created and published.
+        """Timer callback that assembles and publishes a JointState message.
+
+        The method fills the header, names and positions fields and publishes
+        the message on the node's publisher.
         """
         # Create a new JointState message
         msg = JointState()

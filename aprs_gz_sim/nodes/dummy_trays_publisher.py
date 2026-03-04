@@ -2,10 +2,8 @@
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, PoseStamped
-from std_msgs.msg import Header
+from geometry_msgs.msg import PoseStamped
 from aprs_interfaces.msg import Trays, Tray, SlotInfo
-import json
 
 class TrayPublisherNode(Node):
     """
@@ -370,7 +368,15 @@ class TrayPublisherNode(Node):
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
 
     def create_slot_info(self, slot_data):
-        """Helper function to create a SlotInfo message from a dictionary."""
+        """Create a SlotInfo message from a python dictionary.
+
+        Args:
+            slot_data: Dictionary describing a slot with keys 'occupied',
+                'size', 'name' and a nested 'slot_pose'.
+
+        Returns:
+            aprs_interfaces.msg.SlotInfo populated from the dictionary.
+        """
         slot = SlotInfo()
         slot.occupied = slot_data["occupied"]
         slot.size = slot_data["size"]
@@ -390,7 +396,15 @@ class TrayPublisherNode(Node):
         return slot
 
     def create_tray_msg(self, tray_data):
-        """Helper function to create a Tray message from a dictionary."""
+        """Create a Tray message from a python dictionary describing a tray.
+
+        Args:
+            tray_data: Dictionary containing tray fields ('identifier', 'name',
+                'tray_pose', 'slots').
+
+        Returns:
+            aprs_interfaces.msg.Tray populated from the dictionary.
+        """
         tray = Tray()
         tray.identifier = tray_data["identifier"]
         tray.name = tray_data["name"]
@@ -411,7 +425,14 @@ class TrayPublisherNode(Node):
         return tray
 
     def create_trays_msg(self, data):
-        """Helper function to create the main Trays message."""
+        """Create an aprs_interfaces/Trays message from the provided data.
+
+        Args:
+            data: Dictionary with 'kit_trays' and 'part_trays' lists.
+
+        Returns:
+            aprs_interfaces.msg.Trays
+        """
         trays_msg = Trays()
         trays_msg.kit_trays = [self.create_tray_msg(tray) for tray in data["kit_trays"]]
         trays_msg.part_trays = [self.create_tray_msg(tray) for tray in data["part_trays"]]

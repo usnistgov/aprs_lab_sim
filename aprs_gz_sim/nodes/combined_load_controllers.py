@@ -20,6 +20,13 @@ from aprs_gz_sim.utils import ROSAsyncAdapter
 class ControllerStarter(Node):
     def __init__(self):
         super().__init__("controller_starter_node")
+        """Node that loads, configures and activates controllers for all robots.
+
+        This helper node contacts controller_manager services for each
+        robot namespace under /simulation/<robot>/controller_manager to
+        load, configure, and switch controllers at startup. It is intended
+        for use in launch-time controller orchestration.
+        """
 
         sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
         self.set_parameters([sim_time_param])
@@ -34,6 +41,11 @@ class ControllerStarter(Node):
         }
 
     async def load_controllers(self):
+        """Asynchronously call the LoadController service for each controller.
+
+        Raises:
+            Exception: if any controller fails to load.
+        """
         for name, controllers in self.robot_controllers.items():
             client = self.create_client(LoadController, f"/simulation/{name}/controller_manager/load_controller")
             self.get_logger().info(f"Waiting for load service to be ready for {name}")
@@ -51,6 +63,11 @@ class ControllerStarter(Node):
                     raise Exception(f"{name} {controller} failed to load")
 
     async def configure_controllers(self):
+        """Asynchronously call the ConfigureController service for each controller.
+
+        Raises:
+            Exception: if any controller fails to configure.
+        """
         for name, controllers in self.robot_controllers.items():
             client = self.create_client(ConfigureController, f"/{name}/controller_manager/configure_controller")
             self.get_logger().info(f"Waiting for configure service to be ready for {name}")
@@ -68,6 +85,11 @@ class ControllerStarter(Node):
                     raise Exception(f"{name} {controller} failed to configure")
     
     async def switch_controllers(self):
+        """Asynchronously call SwitchController to activate controllers.
+
+        Raises:
+            Exception: if activation fails for any robot.
+        """
         for name, controllers in self.robot_controllers.items():
             client = self.create_client(SwitchController, f"/{name}/controller_manager/switch_controller")
             self.get_logger().info(f"Waiting for activivate service for {name}")

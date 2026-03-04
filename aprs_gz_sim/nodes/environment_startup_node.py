@@ -2,11 +2,15 @@
 
 from aprs_gz_sim.evironment_startup import EnvironmentStartup
 from time import sleep
-from random import randint, random
 
 import rclpy
 
 def main():
+    """Small script to exercise the EnvironmentStartup helper.
+
+    This module is a convenience entry point used in tests or manual runs to
+    spawn a few demo parts and mark the simulated environment as ready.
+    """
     rclpy.init()
 
     startup_node = EnvironmentStartup()
@@ -24,7 +28,7 @@ def main():
     # startup_node.spawn_sensors("advanced_logical_camera_1", "advanced_logical_camera", [0.0, 0.0, 5.0])
     # startup_node.spawn_sensors("advanced_logical_camera_2", "advanced_logical_camera", [1.0, 0.0, 5.0])
 
-    startup_node.spawn_tray(part_type, part_color, [0.0, 0.25, 0.9], 45, ["lg_1"])
+    startup_node.spawn_tray(part_type+"_01", part_type, part_color, [0.0, 0.25, 0.9], 45)
 
     # part_type = "m2l1_kit"
     # part_color = "black"

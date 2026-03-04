@@ -21,7 +21,28 @@ from aprs_gz_sim.utils import ROSAsyncAdapter
 
    
 class ControllerStarter(Node):
+    """Node that loads, configures and switches robot controllers.
+
+    This node is intended for the "separate description" launch mode where
+    each robot is in its own `/simulation/<name>` namespace and has an
+    independent controller manager. When `mirror_env` is True the node also
+    exposes Trigger services to toggle between the passthrough (mimic)
+    controller and the joint_trajectory controller for selected robots at
+    runtime.
+    """
+
     def __init__(self):
+        """Initialize the ControllerStarter node.
+
+        Responsibilities:
+        - initialize the rclpy Node
+        - declare and read the `mirror_env` parameter (accepts bool or string)
+        - build the mapping of robots -> controllers to load
+        - create Trigger services when mirroring is enabled
+
+        The Node will not start controller operations here; call the top-level
+        `run()` coroutine to perform loading/configuring/switching.
+        """
         super().__init__("controller_starter_node")
 
         sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
@@ -60,6 +81,24 @@ class ControllerStarter(Node):
 
 
     def handle_switch_motoman(self, request: Trigger.Request, response: Trigger.Response):
+        """ROS Trigger callback to request a controller switch for Motoman.
+
+        This callback is executed in the ROS executor thread. It does not
+        perform the switch directly; instead it schedules the asynchronous
+        `_async_switch_controllers` coroutine on the running asyncio loop so
+        that the network/service calls run without blocking the ROS thread.
+
+        The response is returned immediately indicating the request was
+        queued. Any error during the actual switch will be logged by the
+        coroutine itself.
+
+        Args:
+            request: the empty Trigger request (unused)
+            response: the Trigger response to populate
+
+        Returns:
+            The populated Trigger.Response (success=True when queued).
+        """
         # Schedule the coroutine on the running asyncio loop from the ROS callback thread
         try:
             loop = getattr(self, '_asyncio_loop')
@@ -72,6 +111,19 @@ class ControllerStarter(Node):
         return response
 
     def handle_switch_fanuc(self, request: Trigger.Request, response: Trigger.Response):
+        """ROS Trigger callback to request a controller switch for Fanuc.
+
+        Works the same way as `handle_switch_motoman` but targets the Fanuc
+        robot. The function queues the coroutine and returns immediately with
+        a positive response indicating the operation was enqueued.
+
+        Args:
+            request: the empty Trigger request (unused)
+            response: the Trigger response to populate
+
+        Returns:
+            The populated Trigger.Response (success=True when queued).
+        """
         try:
             loop = getattr(self, '_asyncio_loop')
             asyncio.run_coroutine_threadsafe(self._async_switch_controllers("fanuc"), loop)
@@ -82,6 +134,11 @@ class ControllerStarter(Node):
         return response
 
     async def _async_switch_controllers(self, robot_name: str):
+        """Perform the asynchronous SwitchController request for a robot.
+
+        The method toggles between passthrough and joint_trajectory controllers
+        based on the node's current `active_controllers` state.
+        """
         try:
             self.get_logger().info(f"Switching from controller {self.active_controllers[robot_name]} for robot {robot_name}")
             client = self.create_client(SwitchController, f"/simulation/{robot_name}/controller_manager/switch_controller")
@@ -110,6 +167,13 @@ class ControllerStarter(Node):
             self.get_logger().error(f'Error switching {robot_name} controllers: {e}')
 
     async def load_controllers(self):
+        """Asynchronously load configured controllers for every robot.
+
+        Iterates `self.robot_controllers`, calls the controller_manager's
+        `load_controller` service for each controller name and raises an
+        Exception if any controller fails to load. The caller should handle
+        exceptions to abort startup or retry as appropriate.
+        """
         for name, controllers in self.robot_controllers.items():
             self.get_logger().info(f"Loading {controllers} for {name}")
             client = self.create_client(LoadController, f"/simulation/{name}/controller_manager/load_controller")
@@ -126,6 +190,14 @@ class ControllerStarter(Node):
                     raise Exception(f"{name} {controller} failed to load")
 
     async def configure_controllers(self):
+        """Asynchronously configure loaded controllers for every robot.
+
+        For each controller this method calls the controller_manager's
+        `configure_controller` service and raises an Exception if configure
+        returns a negative response. This should be called after
+        `load_controllers` and before switching controllers into an
+        active state.
+        """
         for name, controllers in self.robot_controllers.items():
             client = self.create_client(ConfigureController, f"/simulation/{name}/controller_manager/configure_controller")
             await ROSAsyncAdapter.await_service_ready(client)
@@ -142,6 +214,19 @@ class ControllerStarter(Node):
                     raise Exception(f"{name} {controller} failed to configure")
     
     async def switch_controllers(self):
+        """Activate the appropriate controllers for each robot.
+
+        This method performs the final `switch_controller` calls to move
+        controllers from the 'configured' state into the 'active' state. When
+        `mirror_env` is enabled the Fanuc and Motoman robots will have the
+        passthrough controller active alongside the joint_state_broadcaster so
+        the simulated joints follow the real-robot commands. For other
+        robots the pre-defined controllers list is activated.
+
+        Raises:
+            Exception: if the controller_manager responds with a failure for
+                       any robot.
+        """
         for name, controllers in self.robot_controllers.items():
             client = self.create_client(SwitchController, f"/simulation/{name}/controller_manager/switch_controller")
             await ROSAsyncAdapter.await_service_ready(client)
@@ -162,6 +247,12 @@ class ControllerStarter(Node):
                 raise Exception(f"{name} controllers failed to activate")
     
 async def run():
+    """Create and run the ControllerStarter and keep it responsive.
+
+    This coroutine sets up a MultiThreadedExecutor to spin ROS callbacks in a
+    background asyncio task while the main coroutine performs controller
+    orchestration.
+    """
     controller_starter = ControllerStarter()
 
     executor = MultiThreadedExecutor()
