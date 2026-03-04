@@ -9,6 +9,7 @@ find_package(gz-sim8 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(conveyor_interfaces REQUIRED)
 find_package(aprs_interfaces REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   ament_cmake
@@ -17,6 +18,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   gz-cmake3
   gz-sim8
   rclcpp
+  tf2_ros
   conveyor_interfaces
   aprs_interfaces
 )
@@ -48,10 +50,20 @@ ament_target_dependencies(SpawnPart
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
+# Tf publisher plugin
+
+add_library(TFPublisherPlugin SHARED src/tf_publisher_plugin.cpp)
+target_include_directories(TFPublisherPlugin PUBLIC include)
+
+ament_target_dependencies(TFPublisherPlugin
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
 ament_export_libraries(
   ConveyorPlugin
   GearPlugin
   SpawnPart
+  TFPublisherPlugin
 )
 
 install(
@@ -59,6 +71,7 @@ install(
     ConveyorPlugin
     GearPlugin
     SpawnPart
+    TFPublisherPlugin
   DESTINATION 
     lib/${PROJECT_NAME}
 )

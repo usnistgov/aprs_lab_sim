@@ -6,7 +6,7 @@
     <link name="ur_cart_link">
 
       <visual name="ur_cart_visual">
-        <pose>1 -1.375 0.40005 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
             <size> 0.727075 0.644525 0.8001 </size>
@@ -19,7 +19,7 @@
       </visual>
 
       <collision name="ur_cart_collision">
-        <pose>1.0 -1.375 0.40005 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
             <size> 0.727075 0.644525 0.8001 </size>

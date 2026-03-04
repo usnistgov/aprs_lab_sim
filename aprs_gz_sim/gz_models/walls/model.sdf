@@ -3,9 +3,10 @@
   <model name="walls">
     <static>true</static>
 
-    <link name="walls_link">
+    <link name="base_link" />
 
-      <visual name="tv_wall">
+    <link name="tv_wall">
+      <visual name="visual">
         <pose>2.0701 0 1.5 0 0 0</pose>
         <geometry>
           <box>
@@ -18,7 +19,7 @@
         </material>
       </visual>
 
-      <collision name="tv_wall_collision">
+      <collision name="collision">
         <pose>2.0701 0 1.5 0 0 0</pose>
         <geometry>
           <box>
@@ -27,7 +28,9 @@
         </geometry>
       </collision>
 
-      <visual name="side_wall">
+    </link>
+    <link name="side_wall">
+      <visual name="visual">
         <pose>0 1.8161 1.5 0 0 0</pose>
         <geometry>
           <box>
@@ -40,7 +43,7 @@
         </material>
       </visual>
 
-      <collision name="side_wall_collision">
+      <collision name="collision">
         <pose>0 1.8161 1.5 0 0 0</pose>
         <geometry>
           <box>
@@ -50,5 +53,16 @@
       </collision>
 
     </link>
+
+    <joint name="base_to_tv_wall" type="fixed">
+      <parent>base_link</parent>
+      <child>tv_wall</child>
+    </joint>
+
+    <joint name="base_to_side_wall" type="fixed">
+      <parent>base_link</parent>
+      <child>side_wall</child>
+    </joint>
+
   </model>
 </sdf>
