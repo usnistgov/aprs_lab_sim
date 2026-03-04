@@ -8,10 +8,10 @@
       <visual name="optical_table_visual">
         <!-- <pose>-0.1000125 0.320675 0.422275 0 0 0 </pose> -->
         <!-- <pose>-0.1000125 0.320675 0 0 0 1.5708 </pose> -->
-        <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
-            <size> 2.4384 1.2192 0.84455 </size>
+            <size> 2.4384 1.2192 0.85 </size>
           </box>
           <!-- <mesh>
             <uri>model://optical_table/meshes/New_Motoman_Table.stl</uri>
@@ -24,7 +24,7 @@
       </visual>
 
       <collision name="optical_table_collision">
-        <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
             <size> 2.4384 1.2192 0.84455 </size>
@@ -36,5 +36,18 @@
       </collision>
 
     </link>
+
+    <link name="corner_link">
+      <pose>-1.2192 -0.6096 0.425 0 0 0</pose>
+    </link>
+
+    <plugin
+      filename="libTFPublisherPlugin.so"
+      name="aprs_plugins::TFPublisherPlugin">
+      <base_link>optical_table_link</base_link>
+      <static>true</static>
+      <child link="corner_link" frame="corner_frame"/>
+      
+    </plugin>
   </model>
 </sdf>

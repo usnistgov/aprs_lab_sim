@@ -6,7 +6,7 @@
     <link name="franka_cart_link">
 
       <visual name="franka_cart_visual">
-        <pose>-1 -1.375 0.41989375 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
             <size> 0.9890125 0.6746875 0.8397875 </size>
@@ -19,7 +19,7 @@
       </visual>
 
       <collision name="franka_cart_collision">
-        <pose>-1 -1.375 0.41989375 0 0 0</pose>
+        <!-- Pose removed as it is now defined in the world file -->
         <geometry>
           <box>
             <size> 0.9890125 0.6746875 0.8397875 </size>

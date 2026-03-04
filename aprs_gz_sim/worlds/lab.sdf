@@ -106,31 +106,31 @@
     
     <include>
       <name>optical_table</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
       <uri>model://optical_table</uri>
     </include>
 
     <include>
       <name>conveyor_belt</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>-2 -7.12 0.08 0 0 0</pose>
       <uri>model://conveyor_belt</uri>
     </include>
 
     <include>
       <name>franka_cart</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>-1 -1.375 0.41989375 0 0 0</pose>
       <uri>model://franka_cart</uri>
     </include>
 
     <include>
       <name>ur_cart</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>1 -1.375 0.40005 0 0 0</pose>
       <uri>model://ur_cart</uri>
     </include>
 
     <include>
       <name>work_area</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>0 0 0.00005 0 0 0</pose>
       <uri>model://work_area</uri>
     </include>
 

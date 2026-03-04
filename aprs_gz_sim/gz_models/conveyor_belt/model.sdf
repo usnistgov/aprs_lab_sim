@@ -5,8 +5,7 @@
       <link name="conveyor_base">
         <inertial auto="true"/>
         <visual name="conveyor_base_visual">
-          <!-- <pose>-0.15 -0.6 0.445 0 0 0</pose> -->
-          <pose>-2 -7.12 0.08 0 0 0</pose>
+          <!-- Pose removed as it is now defined in the world file -->
           <geometry>
             <!-- <box>
               <size> 3.05 0.65 0.89 </size>
@@ -21,8 +20,7 @@
           </material>
         </visual>
         <collision name="conveyor_base_collision">
-          <density>2700</density>
-          <pose>-0.15 -0.62 0.3615 0 0 0</pose>
+          <!-- Pose removed as it is now defined in the world file -->
           <geometry>
             <box>
               <size> 3.05 0.65 0.7 </size>

@@ -5,6 +5,18 @@ from rclpy.node import Node
 
 import math
 
+import tf2_ros
+
+from rclpy.time import Time, Duration
+
+from geometry_msgs.msg import Quaternion, Pose
+
+from controller_manager_msgs.srv import SwitchController
+from std_msgs.msg import Bool
+
+from time import sleep
+
+from math import pi
 from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
 from aprs_gz_sim.evironment_startup import EnvironmentStartup
@@ -34,6 +46,9 @@ class CloneNode(Node):
         motoman_orientation = quaternion_to_msg(quaternion_from_euler(0, math.pi, 0))
         teach_orientation = quaternion_to_msg(quaternion_from_euler(0, math.pi, math.pi))
 
+        self.tf_buffer = tf2_ros.Buffer()
+        tf2_ros.TransformListener(self.tf_buffer, self)
+
         self.fanuc_vision_pose_ = build_pose(-0.25, 0.575 - 0.5, 0.9, fanuc_orientation)
         self.motoman_vision_pose_ = build_pose(0.35, 0.325 - 0.5, 0.9, motoman_orientation)
         self.teach_vision_pose_ = build_pose(-2.35, -1.4 - 0.5, 0.76, teach_orientation)
@@ -43,6 +58,31 @@ class CloneNode(Node):
         self.teach_trays_info_sub = self.create_subscription(Trays, '/teach/table_trays_info', self.update_teach_trays, 10)
 
     def update_motoman_trays(self, msg: Trays):
+        image_frame = 'motoman_table_image'
+        table_frame = 'optical_table_corner_frame'
+
+
+        try:   
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(), timeout=Duration(seconds=1)).transform 
+            self.get_logger().info(f"Table frame translation: {self.table_frame_transform.translation}")
+            self.get_logger().info(f"Table frame orientation: {self.table_frame_transform.rotation}")
+
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(), timeout=Duration(seconds=1)).transform
+            self.get_logger().info(f"Image frame translation: {self.image_frame_transform.translation}")
+            self.get_logger().info(f"Image frame orientation: {self.image_frame_transform.rotation}")
+
+            self.table_frame_pose = Pose()
+            self.table_frame_pose.position = self.table_frame_transform.translation
+            self.table_frame_pose.orientation = self.table_frame_transform.rotation
+
+            self.image_frame_pose = Pose()
+            self.image_frame_pose.position = self.image_frame_transform.translation
+            self.image_frame_pose.orientation = self.image_frame_transform.rotation
+
+        except Exception as e:
+            self.get_logger().error(f"Failed to get transform: {e}")
+            return
+        
         if self.motoman_trays_spawned:
             return
         
@@ -50,7 +90,9 @@ class CloneNode(Node):
         
         for tray in all_trays:
             tray: Tray
-            world_pose = multiply_pose(self.motoman_vision_pose_, tray.tray_pose.pose)
+            image_pose = multiply_pose(self.table_frame_pose, self.image_frame_pose)
+            world_pose = multiply_pose(image_pose, tray.tray_pose.pose)
+
             
             tray_type = self.tray_types_[tray.identifier - 13]
             tray_color = "black"
@@ -73,13 +115,39 @@ class CloneNode(Node):
             self.spawner_node.environment_ready()
     
     def update_fanuc_trays(self, msg: Trays):
+        image_frame = 'fanuc_table_image'
+        table_frame = 'optical_table_corner_frame'
+
+
+        try:   
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(), timeout=Duration(seconds=1)).transform 
+            self.get_logger().info(f"Table frame translation: {self.table_frame_transform.translation}")
+            self.get_logger().info(f"Table frame orientation: {self.table_frame_transform.rotation}")
+
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(), timeout=Duration(seconds=1)).transform
+            self.get_logger().info(f"Image frame translation: {self.image_frame_transform.translation}")
+            self.get_logger().info(f"Image frame orientation: {self.image_frame_transform.rotation}")
+
+            self.table_frame_pose = Pose()
+            self.table_frame_pose.position = self.table_frame_transform.translation
+            self.table_frame_pose.orientation = self.table_frame_transform.rotation
+
+            self.image_frame_pose = Pose()
+            self.image_frame_pose.position = self.image_frame_transform.translation
+            self.image_frame_pose.orientation = self.image_frame_transform.rotation
+
+        except Exception as e:
+            self.get_logger().error(f"Failed to get transform: {e}")
+            return
+        4455
         if self.fanuc_trays_spawned:
             return
         
         all_trays: list[Tray] = msg.kit_trays + msg.part_trays # type: ignore
         
         for tray in all_trays:
-            world_pose = multiply_pose(self.fanuc_vision_pose_, tray.tray_pose.pose)
+            image_pose = multiply_pose(self.table_frame_pose, self.image_frame_pose)
+            world_pose = multiply_pose(image_pose, tray.tray_pose.pose)
             
             tray_type = self.tray_types_[tray.identifier - 13]
             tray_color = "black"
