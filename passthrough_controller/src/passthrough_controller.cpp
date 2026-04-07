@@ -125,6 +125,9 @@ controller_interface::return_type PassthroughController::update(
 
     if(joint_names_[i] == "joint_l" || joint_names_[i] == "joint_t" || joint_names_[i] == "joint_r"){
       mult = -1;
+    } else if (joint_names_[i] == "motoman_right_finger_joint" || joint_names_[i] == "motoman_left_finger_joint"){
+      RCLCPP_INFO(get_node()->get_logger(),
+      "Joint '%s' has position '%f", joint_names_[i].c_str(), msg.position[joint_index] * mult);
     }
     
     if (joint_index >= 0 && joint_index < static_cast<int>(msg.position.size())) {

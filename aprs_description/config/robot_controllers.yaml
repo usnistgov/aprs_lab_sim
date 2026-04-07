@@ -224,6 +224,8 @@ simulation/motoman:
         - joint_s
         - joint_t
         - joint_u
+        - motoman_left_finger_joint
+        - motoman_right_finger_joint
 
       real_robot_joint_states_topic: "/motoman/joint_states"
         
