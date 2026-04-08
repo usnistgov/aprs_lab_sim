@@ -320,7 +320,6 @@ class EnvironmentStartup(Node):
             xyz: Position vector [x,y,z].
         """
         self.get_logger().info("INSIDE SPAWN PART")
-        # while True:
         request = SpawnPart.Request()
         
         request.type = part_type
@@ -428,7 +427,7 @@ class EnvironmentStartup(Node):
             self.get_logger().error("Error calling spawn_part service")
 
         else:
-            self.get_logger().info("\n"*5 + "Successfully spwned gear" + "\n"*5)
+            self.get_logger().info("\n"*5 + "Successfully spawned gear" + "\n"*5)
     
     def get_tray_xml(self, tray_name, color):
         """Return an SDF/XML string for a tray model with the requested color.
@@ -512,7 +511,7 @@ class EnvironmentStartup(Node):
             self.get_logger().error("Error calling spawn_part service")
 
         else:
-            self.get_logger().info("\n"*5 + "Successfully spwned tray" + "\n"*5)
+            self.get_logger().info("\n"*5 + "Successfully spawned tray" + "\n"*5)
             occupied_slots = list(set(occupied_slots))
             if len(occupied_slots) > 0:
                 sleep(0.5)

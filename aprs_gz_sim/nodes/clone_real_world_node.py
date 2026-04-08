@@ -19,7 +19,7 @@ from time import sleep
 from math import pi
 from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
-from aprs_gz_sim.evironment_startup import EnvironmentStartup
+from aprs_gz_sim.environment_startup import EnvironmentStartup
 
 from aprs_gz_sim.utils import quaternion_from_euler, build_pose, multiply_pose, rad_to_deg, rpy_from_quaternion, quaternion_to_msg
 

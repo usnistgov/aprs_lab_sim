@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from aprs_gz_sim.evironment_startup import EnvironmentStartup
+from aprs_gz_sim.environment_startup import EnvironmentStartup
 from time import sleep
 
 import rclpy
