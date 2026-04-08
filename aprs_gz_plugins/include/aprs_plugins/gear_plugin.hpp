@@ -1,6 +1,7 @@
 #ifndef ARIAC_PLUGINS__GEAR_PLUGIN_HPP_
 #define ARIAC_PLUGINS__GEAR_PLUGIN_HPP_
 
+#include <gz/sim/Link.hh>
 #include <gz/sim/Model.hh>
 #include <gz/sim/Util.hh>
 #include <gz/sim/Sensor.hh>
@@ -14,12 +15,12 @@
 
 namespace aprs_plugins
 {
-  enum class LockState {
-    LOCKED,
-    UNLOCKED,
-    LOCK_REQUESTED,
-    UNLOCK_REQUESTED
-  };
+  // enum class LockState {
+  //   LOCKED,
+  //   UNLOCKED,
+  //   LOCK_REQUESTED,
+  //   UNLOCK_REQUESTED
+  // };
 
   class GearPlugin
     : public gz::sim::System,
@@ -40,14 +41,19 @@ namespace aprs_plugins
         gz::sim::EntityComponentManager &_ecm) final;
     
     private:
-      void contact_sensor_1_cb(const gz::msgs::Contacts &);
+      void contact_cb(const gz::msgs::Contacts &);
 
       std::shared_ptr<gz::transport::Node> gz_node;
-      gz::sim::Entity lock_joint;
 
+      std::string gz_contact_topic;
+      
+      gz::sim::Entity gear_entity;
       gz::sim::Entity gear_base_link;
 
-      LockState lock_state = LockState::UNLOCKED;
+      gz::math::Pose3d goal_gear_pose = gz::math::Pose3d(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+      bool teleport_requested = false;
+      bool teleported = false;
   };
 }
 

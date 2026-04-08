@@ -328,8 +328,8 @@ class EnvironmentStartup(Node):
         
         new_part_pose = Pose()
         new_part_pose.position.x = float(xyz[0])
-        new_part_pose.position.z = float(xyz[2])
         new_part_pose.position.y = float(xyz[1])
+        new_part_pose.position.z = float(xyz[2])
         new_part_pose.orientation.x = 0.0
         new_part_pose.orientation.y = 0.0
         new_part_pose.orientation.z = 0.0
@@ -404,8 +404,8 @@ class EnvironmentStartup(Node):
         
         new_part_pose = Pose()
         new_part_pose.position.x = float(xyz[0])
-        new_part_pose.position.z = float(xyz[2])
         new_part_pose.position.y = float(xyz[1])
+        new_part_pose.position.z = float(xyz[2])
         new_part_pose.orientation.x = 0.0
         new_part_pose.orientation.y = 0.0
         new_part_pose.orientation.z = 0.0
@@ -484,8 +484,8 @@ class EnvironmentStartup(Node):
         
         new_part_pose = Pose()
         new_part_pose.position.x = float(xyz[0])
-        new_part_pose.position.z = float(xyz[2])
         new_part_pose.position.y = float(xyz[1])
+        new_part_pose.position.z = float(xyz[2])
         rad_rot = rotation*math.pi/180
         orientation = quaternion_from_euler(rad_rot, 0.0, 3.14159)
         new_part_pose.orientation.x = float(orientation[0])
@@ -561,3 +561,4 @@ class EnvironmentStartup(Node):
         self.env_ready = True
         self.publish_environment_status()
         
+

@@ -139,7 +139,7 @@ class CloneNode(Node):
         except Exception as e:
             self.get_logger().error(f"Failed to get transform: {e}")
             return
-        4455
+
         if self.fanuc_trays_spawned:
             return
         
