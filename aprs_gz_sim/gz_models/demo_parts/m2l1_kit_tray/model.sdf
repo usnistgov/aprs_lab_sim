@@ -41,6 +41,15 @@
           </box>
         </geometry>
       </collision>
+      <sensor name='contact_sensor' type='contact'>
+        <contact>
+          <collision>collision</collision>
+        </contact>
+      </sensor>
+      <plugin
+      filename="libSlotPlugin.so"
+      name="aprs_plugins::SlotPlugin">
+      </plugin>
     </link>
 
     <link name="mg_1">
@@ -54,6 +63,15 @@
           </box>
         </geometry>
       </collision>
+      <sensor name='contact_sensor' type='contact'>
+        <contact>
+          <collision>collision</collision>
+        </contact>
+      </sensor>
+      <plugin
+      filename="libSlotPlugin.so"
+      name="aprs_plugins::SlotPlugin">
+      </plugin>
     </link>
 
     <link name="mg_2">
@@ -67,6 +85,15 @@
           </box>
         </geometry>
       </collision>
+      <sensor name='contact_sensor' type='contact'>
+        <contact>
+          <collision>collision</collision>
+        </contact>
+      </sensor>
+      <plugin
+      filename="libSlotPlugin.so"
+      name="aprs_plugins::SlotPlugin">
+      </plugin>
     </link>
 
     <joint name="lg_1_joint" type="fixed">

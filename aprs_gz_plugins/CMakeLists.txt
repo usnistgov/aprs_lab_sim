@@ -41,6 +41,15 @@ ament_target_dependencies(GearPlugin
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
+# Gear plugin
+
+add_library(SlotPlugin SHARED src/slot_plugin.cpp)
+target_include_directories(SlotPlugin PUBLIC include)
+
+ament_target_dependencies(SlotPlugin
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
 # Spawn part
 
 add_library(SpawnPart SHARED src/spawn_part.cpp)
@@ -62,6 +71,7 @@ ament_target_dependencies(TFPublisherPlugin
 ament_export_libraries(
   ConveyorPlugin
   GearPlugin
+  SlotPlugin
   SpawnPart
   TFPublisherPlugin
 )
@@ -70,6 +80,7 @@ install(
   TARGETS
     ConveyorPlugin
     GearPlugin
+    SlotPlugin
     SpawnPart
     TFPublisherPlugin
   DESTINATION 
