@@ -141,6 +141,8 @@ simulation/fanuc:
         - joint_4
         - joint_5
         - joint_6
+        - fanuc_left_finger_joint
+        - fanuc_right_finger_joint
 
       real_robot_joint_states_topic: "/fanuc/joint_states"
   

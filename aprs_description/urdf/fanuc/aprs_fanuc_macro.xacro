@@ -11,7 +11,7 @@
     <xacro:include filename="$(find aprs_description)/urdf/fanuc/aprs_fanuc.ros2_control.xacro"/>
 
     <!-- Inclue gripper macro -->
-    <xacro:include filename="$(find aprs_description)/urdf/vacuum_gripper/vacuum_gripper_macro.xacro"/>
+    <xacro:include filename="$(find aprs_description)/urdf/fanuc/fanuc_gripper_macro.xacro"/>
 
     <xacro:property name="initial_positions_file" default="$(find aprs_description)/config/fanuc_initial_positions.yaml"/>
 
@@ -27,11 +27,7 @@
     </xacro:aprs_fanuc_ros2_control>
 
     <!-- Run gripper macro -->
-    <xacro:vacuum_gripper
-      parent="fanuc_gripper_link"
-      prefix="fanuc"
-      >
-    </xacro:vacuum_gripper>
+    <xacro:fanuc_gripper parent="link_6" />
 
   </xacro:macro>
 </robot>

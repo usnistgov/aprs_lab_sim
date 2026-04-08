@@ -194,7 +194,6 @@
             <inertia ixx="0.0226667" ixy="0.0" ixz="0.0" iyy="0.0226667" iyz="0.0" izz="0.0226667" />
          </inertial>
       </link>
-      <link name="fanuc_gripper_link"/>
       
 
    <!--   <link name="tool0" /> -->
@@ -247,11 +246,6 @@
          <axis xyz="-1 0 0"/>
          <limit effort="${joint6effort}" lower="${joint6lower}" upper="${joint6upper}" velocity="${joint6velocity}" />
       </joint>
-      <joint name = "fanuc_link_6_to_gripper" type = "fixed">
-         <origin xyz = "0 0 0" rpy = "0 1.57 0"/>
-         <parent link = "link_6"/>
-         <child link = "fanuc_gripper_link"/>
-      </joint>
 
 
 
@@ -280,10 +274,6 @@
          <turnGravityOff>true</turnGravityOff>
       </gazebo>
       <gazebo reference="link_6">
-         <material>Gazebo/Yellow</material>
-         <turnGravityOff>true</turnGravityOff>
-      </gazebo>
-      <gazebo reference="fanuc_gripper_link">
          <material>Gazebo/Yellow</material>
          <turnGravityOff>true</turnGravityOff>
       </gazebo>
