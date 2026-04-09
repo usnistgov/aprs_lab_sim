@@ -41,12 +41,21 @@ ament_target_dependencies(GearPlugin
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
-# Gear plugin
+# Slot plugin
 
 add_library(SlotPlugin SHARED src/slot_plugin.cpp)
 target_include_directories(SlotPlugin PUBLIC include)
 
 ament_target_dependencies(SlotPlugin
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
+# State saver plugin
+
+add_library(StateSaverPlugin SHARED src/state_saver_plugin.cpp)
+target_include_directories(StateSaverPlugin PUBLIC include)
+
+ament_target_dependencies(StateSaverPlugin
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
@@ -73,6 +82,7 @@ ament_export_libraries(
   GearPlugin
   SlotPlugin
   SpawnPart
+  StateSaverPlugin
   TFPublisherPlugin
 )
 
@@ -82,8 +92,9 @@ install(
     GearPlugin
     SlotPlugin
     SpawnPart
+    StateSaverPlugin
     TFPublisherPlugin
-  DESTINATION 
+  DESTINATION
     lib/${PROJECT_NAME}
 )
 

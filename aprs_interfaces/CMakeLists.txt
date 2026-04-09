@@ -21,6 +21,8 @@ set(msg_files
 set(srv_files
   "srv/SpawnPart.srv"
   "srv/SpawnSensor.srv"
+  "srv/SaveState.srv"
+  "srv/LoadState.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
