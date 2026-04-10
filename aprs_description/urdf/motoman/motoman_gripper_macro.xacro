@@ -8,7 +8,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_gripper_link_simplified.stl"/>
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_gripper_link_simplified.stl"/>
         </geometry>
         <material name="">
           <color rgba="0.15 0.15 0.15 1.0" />
@@ -18,7 +18,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_gripper_link_simplified.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_gripper_link_simplified.stl" />
         </geometry>
       </collision>
       <inertial>
@@ -33,17 +33,17 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_left_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_left_finger.stl" />
         </geometry>
         <material name="">
-          <color rgba="0.79216 0.81961 0.93333 1" />
+          <color rgba="0.79216 0.81961 0.93333 1"/>
         </material>
       </visual>
 
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_left_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_left_finger.stl" />
         </geometry>
       </collision>
       <inertial>
@@ -58,7 +58,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_right_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_right_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -68,7 +68,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find motoman_description)/meshes/motoman_right_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/motoman/gripper/motoman_right_finger.stl" />
         </geometry>
       </collision>
       <inertial>

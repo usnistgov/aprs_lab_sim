@@ -6,7 +6,7 @@
   <link name="aprs_ur_base_link"/>
 
   <joint name = "ur_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "0.7864625 -1.375 0.8001"/>
+    <origin rpy = "0 0 0" xyz = "2.065675 -1.126075 -0.0749"/>
     <parent link = "world"/>
     <child link = "aprs_ur_base_link"/>
   </joint>

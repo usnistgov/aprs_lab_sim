@@ -8,7 +8,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/gripper_link.stl"/>
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/gripper_link.stl"/>
         </geometry>
         <material name="">
           <color rgba="0.15 0.15 0.15 1.0" />
@@ -18,7 +18,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/gripper_link.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/gripper_link.stl" />
         </geometry>
       </collision>
 
@@ -34,7 +34,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/fanuc_left_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/fanuc_left_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -44,7 +44,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/fanuc_left_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/fanuc_left_finger.stl" />
         </geometry>
       </collision>
 
@@ -60,7 +60,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/fanuc_right_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/fanuc_right_finger.stl" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -70,7 +70,7 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find fanuc_description)/meshes/fanuc_right_finger.stl" />
+          <mesh filename="file://$(find aprs_description)/meshes/fanuc/gripper/fanuc_right_finger.stl" />
         </geometry>
       </collision>
 

@@ -10,25 +10,25 @@
   <link name="aprs_motoman_base_link"/>
 
   <joint name = "ur_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "0.7864625 -1.375 0.8001"/>
+    <origin rpy = "0 0 0" xyz = "2.065675 -1.126075 -0.0749"/>
     <parent link = "world"/>
     <child link = "aprs_ur_base_link"/>
   </joint>
 
   <joint name = "fanuc_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "-0.5222875 -0.073025 0.84455"/>
+    <origin rpy = "0 0 0" xyz = "0.756925 0.1759 -0.03045"/>
     <parent link = "world"/>
     <child link = "aprs_fanuc_base_link"/>
   </joint>
 
   <joint name = "franka_world_to_base" type = "fixed">
-    <origin rpy = "0 0 0" xyz = "-1.3145625 -1.375 0.8397875"/>
+    <origin rpy = "0 0 0" xyz = "-0.03535 -1.126075 -0.0352125"/>
     <parent link = "world"/>
     <child link = "aprs_franka_base_link"/>
   </joint>
 
   <joint name = "motoman_world_to_base" type = "fixed">
-    <origin rpy = "0 0 3.14159" xyz = "0.4953 -0.08255 0.9"/>
+    <origin rpy = "0 0 3.14159" xyz = "1.7745125 0.166375 0.025"/>
     <parent link = "world"/>
     <child link = "aprs_motoman_base_link"/>
   </joint>

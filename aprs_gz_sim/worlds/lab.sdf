@@ -106,49 +106,49 @@
     
     <include>
       <name>optical_table</name>
-      <pose>-0.1000125 0.320675 0.45 0 0 0</pose>
+      <pose>1.1792 0.5696 -0.425 0 0 0</pose>
       <uri>model://optical_table</uri>
     </include>
 
     <include>
       <name>conveyor_belt</name>
-      <pose>-2 -7.12 0.08 0 0 0</pose>
+      <pose>-0.7207875 -6.871075 -0.795 0 0 0</pose>
       <uri>model://conveyor_belt</uri>
     </include>
 
     <include>
       <name>franka_cart</name>
-      <pose>-1 -1.375 0.41989375 0 0 0</pose>
+      <pose>0.2792125 -1.126075 -0.45510625 0 0 0</pose>
       <uri>model://franka_cart</uri>
     </include>
 
     <include>
       <name>ur_cart</name>
-      <pose>1 -1.375 0.40005 0 0 0</pose>
+      <pose>2.2792125 -1.126075 -0.47495 0 0 0</pose>
       <uri>model://ur_cart</uri>
     </include>
 
     <include>
       <name>work_area</name>
-      <pose>0 0 0.00005 0 0 0</pose>
+      <pose>1.2792125 0.248925 -0.87495 0 0 0</pose>
       <uri>model://work_area</uri>
     </include>
 
     <include>
       <name>walls</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>1.2792125 0.248925 -0.875 0 0 0</pose>
       <uri>model://walls</uri>
     </include>
 
     <include>
       <name>light_bars</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>1.2792125 0.248925 -0.875 0 0 0</pose>
       <uri>model://light_bars</uri>
     </include>
     
     <include>
       <name>teach_table</name>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>1.2792125 0.248925 -0.875 0 0 0</pose>
       <uri>model://teach_table</uri>
     </include>
 
