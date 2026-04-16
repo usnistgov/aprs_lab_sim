@@ -1,8 +1,8 @@
 #ifndef ARIAC_PLUGINS__GEAR_PLUGIN_HPP_
 #define ARIAC_PLUGINS__GEAR_PLUGIN_HPP_
 
-#include <aprs_interfaces/srv/spawn_part.hpp>
-#include <aprs_interfaces/srv/spawn_sensor.hpp>
+#include <aprs_sim_interfaces/srv/spawn_part.hpp>
+#include <aprs_sim_interfaces/srv/spawn_sensor.hpp>
 
 #include <gflags/gflags.h>
 
@@ -49,8 +49,8 @@ namespace aprs_plugins
       int gear_count = 0;
       int part_count = 0;
 
-      rclcpp::Service<aprs_interfaces::srv::SpawnPart>::SharedPtr spawn_part_srv_;
-      rclcpp::Service<aprs_interfaces::srv::SpawnSensor>::SharedPtr spawn_sensor_srv_;
+      rclcpp::Service<aprs_sim_interfaces::srv::SpawnPart>::SharedPtr spawn_part_srv_;
+      rclcpp::Service<aprs_sim_interfaces::srv::SpawnSensor>::SharedPtr spawn_sensor_srv_;
 
       std::shared_ptr<gz::transport::Node> gz_node;
 
@@ -58,8 +58,8 @@ namespace aprs_plugins
       rclcpp::executors::MultiThreadedExecutor::SharedPtr executor_;
       std::thread thread_executor_spin_;
 
-      void spawn_part_cb_(const std::shared_ptr<aprs_interfaces::srv::SpawnPart::Request> request, std::shared_ptr<aprs_interfaces::srv::SpawnPart::Response> response);
-      void spawn_sensor_cb_(const std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Request> request, std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Response> response);
+      void spawn_part_cb_(const std::shared_ptr<aprs_sim_interfaces::srv::SpawnPart::Request> request, std::shared_ptr<aprs_sim_interfaces::srv::SpawnPart::Response> response);
+      void spawn_sensor_cb_(const std::shared_ptr<aprs_sim_interfaces::srv::SpawnSensor::Request> request, std::shared_ptr<aprs_sim_interfaces::srv::SpawnSensor::Response> response);
   
       std::vector<float> get_rpy_from_quaternion(float, float, float, float);
   };

@@ -9,8 +9,8 @@
 #include <gz/sim/components.hh>
 #include <gz/plugin/Register.hh>
 
-#include <aprs_interfaces/srv/save_state.hpp>
-#include <aprs_interfaces/srv/load_state.hpp>
+#include <aprs_sim_interfaces/srv/save_state.hpp>
+#include <aprs_sim_interfaces/srv/load_state.hpp>
 
 #include <map>
 #include <memory>
@@ -42,12 +42,12 @@ namespace aprs_plugins
     private:
       // Service callbacks
       void SaveState(
-        const std::shared_ptr<aprs_interfaces::srv::SaveState::Request> _req,
-        std::shared_ptr<aprs_interfaces::srv::SaveState::Response> _res);
+        const std::shared_ptr<aprs_sim_interfaces::srv::SaveState::Request> _req,
+        std::shared_ptr<aprs_sim_interfaces::srv::SaveState::Response> _res);
 
       void LoadState(
-        const std::shared_ptr<aprs_interfaces::srv::LoadState::Request> _req,
-        std::shared_ptr<aprs_interfaces::srv::LoadState::Response> _res);
+        const std::shared_ptr<aprs_sim_interfaces::srv::LoadState::Request> _req,
+        std::shared_ptr<aprs_sim_interfaces::srv::LoadState::Response> _res);
 
       // Helper functions
       void SaveRobotStates(gz::sim::EntityComponentManager &_ecm);
@@ -57,8 +57,8 @@ namespace aprs_plugins
 
       // ROS 2 node for services
       std::shared_ptr<rclcpp::Node> ros_node_;
-      rclcpp::Service<aprs_interfaces::srv::SaveState>::SharedPtr save_state_service_;
-      rclcpp::Service<aprs_interfaces::srv::LoadState>::SharedPtr load_state_service_;
+      rclcpp::Service<aprs_sim_interfaces::srv::SaveState>::SharedPtr save_state_service_;
+      rclcpp::Service<aprs_sim_interfaces::srv::LoadState>::SharedPtr load_state_service_;
 
       // Latest ECM from PreUpdate
       gz::sim::EntityComponentManager* latest_ecm_ = nullptr;

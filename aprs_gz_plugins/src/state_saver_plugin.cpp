@@ -25,11 +25,11 @@ namespace aprs_plugins
     ros_node_ = rclcpp::Node::make_shared("state_saver_plugin");
 
     // Create services
-    save_state_service_ = ros_node_->create_service<aprs_interfaces::srv::SaveState>(
+    save_state_service_ = ros_node_->create_service<aprs_sim_interfaces::srv::SaveState>(
       "/aprs/save_state",
       std::bind(&StateSaverPlugin::SaveState, this, std::placeholders::_1, std::placeholders::_2));
 
-    load_state_service_ = ros_node_->create_service<aprs_interfaces::srv::LoadState>(
+    load_state_service_ = ros_node_->create_service<aprs_sim_interfaces::srv::LoadState>(
       "/aprs/load_state",
       std::bind(&StateSaverPlugin::LoadState, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -45,8 +45,8 @@ namespace aprs_plugins
   }
 
   void StateSaverPlugin::SaveState(
-    const std::shared_ptr<aprs_interfaces::srv::SaveState::Request> _req,
-    std::shared_ptr<aprs_interfaces::srv::SaveState::Response> _res)
+    const std::shared_ptr<aprs_sim_interfaces::srv::SaveState::Request> _req,
+    std::shared_ptr<aprs_sim_interfaces::srv::SaveState::Response> _res)
   {
     std::string save_name = _req->save_state_name;
     gzmsg << "Saving state: " << save_name << std::endl;
@@ -76,8 +76,8 @@ namespace aprs_plugins
   }
 
   void StateSaverPlugin::LoadState(
-    const std::shared_ptr<aprs_interfaces::srv::LoadState::Request> _req,
-    std::shared_ptr<aprs_interfaces::srv::LoadState::Response> _res)
+    const std::shared_ptr<aprs_sim_interfaces::srv::LoadState::Request> _req,
+    std::shared_ptr<aprs_sim_interfaces::srv::LoadState::Response> _res)
   {
     std::string load_name = _req->save_state_name;
 

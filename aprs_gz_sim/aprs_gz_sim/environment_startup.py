@@ -23,7 +23,7 @@ from geometry_msgs.msg import (
     Pose
 )
 
-from aprs_interfaces.srv import SpawnPart, SpawnSensor
+from aprs_sim_interfaces.srv import SpawnPart, SpawnSensor
 
 from ament_index_python.packages import get_package_share_directory
         

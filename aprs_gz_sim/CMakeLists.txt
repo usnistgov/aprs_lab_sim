@@ -12,7 +12,7 @@ endif()
 set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclpy
   rclcpp
-  aprs_interfaces
+  aprs_sim_interfaces
   ros_gz_interfaces
 )
 

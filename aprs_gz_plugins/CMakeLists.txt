@@ -8,7 +8,7 @@ find_package(gz-cmake3 REQUIRED)
 find_package(gz-sim8 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(conveyor_interfaces REQUIRED)
-find_package(aprs_interfaces REQUIRED)
+find_package(aprs_sim_interfaces REQUIRED)
 find_package(tf2_ros REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -20,7 +20,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   rclcpp
   tf2_ros
   conveyor_interfaces
-  aprs_interfaces
+  aprs_sim_interfaces
 )
 
 # Conveyor plugin

@@ -3,11 +3,11 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped
-from aprs_interfaces.msg import Trays, Tray, SlotInfo
+from aprs_sim_interfaces.msg import Trays, Tray, SlotInfo
 
 class TrayPublisherNode(Node):
     """
-    A ROS 2 node that publishes aprs_interfaces/Trays messages
+    A ROS 2 node that publishes aprs_sim_interfaces/Trays messages
     on three different topics for FANUC, MOTOMAN, and TEACH stations.
     """
 
@@ -375,7 +375,7 @@ class TrayPublisherNode(Node):
                 'size', 'name' and a nested 'slot_pose'.
 
         Returns:
-            aprs_interfaces.msg.SlotInfo populated from the dictionary.
+            aprs_sim_interfaces.msg.SlotInfo populated from the dictionary.
         """
         slot = SlotInfo()
         slot.occupied = slot_data["occupied"]
@@ -403,7 +403,7 @@ class TrayPublisherNode(Node):
                 'tray_pose', 'slots').
 
         Returns:
-            aprs_interfaces.msg.Tray populated from the dictionary.
+            aprs_sim_interfaces.msg.Tray populated from the dictionary.
         """
         tray = Tray()
         tray.identifier = tray_data["identifier"]
@@ -425,13 +425,13 @@ class TrayPublisherNode(Node):
         return tray
 
     def create_trays_msg(self, data):
-        """Create an aprs_interfaces/Trays message from the provided data.
+        """Create an aprs_sim_interfaces/Trays message from the provided data.
 
         Args:
             data: Dictionary with 'kit_trays' and 'part_trays' lists.
 
         Returns:
-            aprs_interfaces.msg.Trays
+            aprs_sim_interfaces.msg.Trays
         """
         trays_msg = Trays()
         trays_msg.kit_trays = [self.create_tray_msg(tray) for tray in data["kit_trays"]]

@@ -48,12 +48,12 @@ void SpawnPartPlugin::Configure(const gz::sim::Entity &_entity,
 
   gz_node = std::make_shared<gz::transport::Node>();
 
-  spawn_part_srv_ = _ros_node->create_service<aprs_interfaces::srv::SpawnPart>(
+  spawn_part_srv_ = _ros_node->create_service<aprs_sim_interfaces::srv::SpawnPart>(
       "/spawn_part",
       std::bind(&SpawnPartPlugin::spawn_part_cb_, this, std::placeholders::_1, std::placeholders::_2)
   );
 
-  spawn_sensor_srv_ = _ros_node->create_service<aprs_interfaces::srv::SpawnSensor>(
+  spawn_sensor_srv_ = _ros_node->create_service<aprs_sim_interfaces::srv::SpawnSensor>(
       "/spawn_sensor",
       std::bind(&SpawnPartPlugin::spawn_sensor_cb_, this, std::placeholders::_1, std::placeholders::_2)
   );
@@ -61,8 +61,8 @@ void SpawnPartPlugin::Configure(const gz::sim::Entity &_entity,
 }
 
 void SpawnPartPlugin::spawn_part_cb_(
-    const std::shared_ptr<aprs_interfaces::srv::SpawnPart::Request> request,
-    std::shared_ptr<aprs_interfaces::srv::SpawnPart::Response> response
+    const std::shared_ptr<aprs_sim_interfaces::srv::SpawnPart::Request> request,
+    std::shared_ptr<aprs_sim_interfaces::srv::SpawnPart::Response> response
 ){
     std::string world_name = "lab";
     std::string service{"/world/" + world_name + "/create"};
@@ -105,8 +105,8 @@ void SpawnPartPlugin::spawn_part_cb_(
 }
 
 void SpawnPartPlugin::spawn_sensor_cb_(
-    const std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Request> request,
-    std::shared_ptr<aprs_interfaces::srv::SpawnSensor::Response> response
+    const std::shared_ptr<aprs_sim_interfaces::srv::SpawnSensor::Request> request,
+    std::shared_ptr<aprs_sim_interfaces::srv::SpawnSensor::Response> response
 ){
     std::string world_name = "lab";
     std::string service{"/world/" + world_name + "/create"};
