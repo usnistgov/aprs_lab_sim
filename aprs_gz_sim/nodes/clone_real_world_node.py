@@ -66,10 +66,10 @@ class CloneNode(Node):
         table_frame = 'optical_table_corner_frame'
 
 
-        try:   
-            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(), timeout=Duration(seconds=1)).transform 
+        try:
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(0), timeout=Duration(seconds=1)).transform
 
-            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(), timeout=Duration(seconds=1)).transform
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(0), timeout=Duration(seconds=1)).transform
 
             self.table_frame_pose = Pose()
             self.table_frame_pose.position = self.table_frame_transform.translation
@@ -118,11 +118,11 @@ class CloneNode(Node):
         image_frame = 'fanuc_table_image'
         table_frame = 'optical_table_corner_frame'
 
-        self.get_logger().info("Inside fanuc spawn trays" * 10000)
+        self.get_logger().info("Inside fanuc spawn trays")
 
-        try:   
-            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(), timeout=Duration(seconds=1)).transform 
-            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(), timeout=Duration(seconds=1)).transform
+        try:
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(0), timeout=Duration(seconds=1)).transform
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(0), timeout=Duration(seconds=1)).transform
 
             self.table_frame_pose = Pose()
             self.table_frame_pose.position = self.table_frame_transform.translation
