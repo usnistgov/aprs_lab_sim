@@ -138,14 +138,14 @@ def launch_setup(context, *args, **kwargs):
         controller_loader_node
     ]
 
-    if bool(mirror_env):
-        nodes_to_start.append(
-            Node(
-                package="aprs_gz_sim",
-                executable="clone_real_worls_node.py",
-                output="screen"
-            )
-        )
+    # if bool(mirror_env):
+    #     nodes_to_start.append(
+    #         Node(
+    #             package="aprs_gz_sim",
+    #             executable="clone_real_world_node.py",
+    #             output="screen"
+    #         )
+    #     )
 
     return nodes_to_start
 

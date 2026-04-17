@@ -2,6 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.parameter import Parameter
 from geometry_msgs.msg import PoseStamped
 from aprs_sim_interfaces.msg import Trays, Tray, SlotInfo
 
@@ -13,6 +14,9 @@ class TrayPublisherNode(Node):
 
     def __init__(self):
         super().__init__('tray_publisher_node')
+
+        sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
+        self.set_parameters([sim_time_param])
         self.get_logger().info("Tray Publisher Node has been started.")
 
         # --- Publishers ---

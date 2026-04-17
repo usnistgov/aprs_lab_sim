@@ -26,16 +26,16 @@ def launch_setup(context, *args, **kwargs):
         ]
     )
     
-    spawn_part_node = Node(
-        package='aprs_gz_sim',
-        executable='spawn_part'
-    )
+    # spawn_part_node = Node(
+    #     package='aprs_gz_sim',
+    #     executable='spawn_part'
+    # )
     
     
-    environment_startup_node = Node(
-        package='aprs_gz_sim',
-        executable='environment_startup_node.py'
-    )
+    # environment_startup_node = Node(
+    #     package='aprs_gz_sim',
+    #     executable='environment_startup_node.py'
+    # )
     
     combined_robots = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -61,12 +61,14 @@ def launch_setup(context, *args, **kwargs):
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ],
         output="screen",
+        parameters=[{'use_sim_time': True}]
     )
 
     clone_real_world_node = Node(
         package='aprs_gz_sim',
         executable='clone_real_world_node.py',
-        output="screen"
+        output="screen",
+        parameters=[{'use_sim_time': True}]
     )
     
     return [
@@ -74,8 +76,6 @@ def launch_setup(context, *args, **kwargs):
         combined_robots,
         seperate_robots,
         clone_real_world_node,
-        # spawn_part_node,
-        # environment_startup_node,
         gz_sim_bridge
     ]
     

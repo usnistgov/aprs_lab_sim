@@ -8,6 +8,7 @@ import math
 import tf2_ros
 
 from rclpy.time import Time, Duration
+from rclpy.parameter import Parameter
 
 from geometry_msgs.msg import Quaternion, Pose
 
@@ -34,6 +35,9 @@ class CloneNode(Node):
     tray_types_ = ["small_gear", "medium_gear", "large_gear", "m2l1_kit", "s2l2_kit"]
     def __init__(self):
         super().__init__('clone_node')
+
+        sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
+        self.set_parameters([sim_time_param])
         
         self.spawner_node = EnvironmentStartup()
         self.motoman_trays_spawned = False
@@ -114,6 +118,7 @@ class CloneNode(Node):
         image_frame = 'fanuc_table_image'
         table_frame = 'optical_table_corner_frame'
 
+        self.get_logger().info("Inside fanuc spawn trays" * 10000)
 
         try:   
             self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(), timeout=Duration(seconds=1)).transform 

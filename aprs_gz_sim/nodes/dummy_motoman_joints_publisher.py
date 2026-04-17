@@ -2,6 +2,7 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.parameter import Parameter
 from sensor_msgs.msg import JointState
 
 class JointStatePublisher(Node):
@@ -13,6 +14,9 @@ class JointStatePublisher(Node):
     """
     def __init__(self):
         super().__init__('joint_state_publisher')
+
+        sim_time_param = Parameter('use_sim_time', Parameter.Type.BOOL, True)
+        self.set_parameters([sim_time_param])
         
         # Declare and initialize the publisher for JointState messages
         self.publisher_ = self.create_publisher(JointState, '/motoman/joint_states', 10)
