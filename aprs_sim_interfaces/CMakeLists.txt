@@ -12,12 +12,6 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-set(msg_files
-  "msg/Tray.msg"
-  "msg/Trays.msg"
-  "msg/SlotInfo.msg"
-)
-
 set(srv_files
   "srv/SpawnPart.srv"
   "srv/SpawnSensor.srv"

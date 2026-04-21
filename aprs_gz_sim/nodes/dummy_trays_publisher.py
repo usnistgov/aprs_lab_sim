@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from geometry_msgs.msg import PoseStamped
-from aprs_sim_interfaces.msg import Trays, Tray, SlotInfo
+from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
 class TrayPublisherNode(Node):
     """

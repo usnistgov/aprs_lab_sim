@@ -18,7 +18,7 @@ from std_msgs.msg import Bool
 from time import sleep
 
 from math import pi
-from aprs_sim_interfaces.msg import Trays, Tray, SlotInfo
+from aprs_interfaces.msg import Trays, Tray, SlotInfo
 
 from aprs_gz_sim.environment_startup import EnvironmentStartup
 
@@ -67,9 +67,9 @@ class CloneNode(Node):
 
 
         try:
-            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(0), timeout=Duration(seconds=1)).transform
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, self.get_clock().now(), timeout=Duration(seconds=1)).transform
 
-            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(0), timeout=Duration(seconds=1)).transform
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, self.get_clock().now(), timeout=Duration(seconds=1)).transform
 
             self.table_frame_pose = Pose()
             self.table_frame_pose.position = self.table_frame_transform.translation
@@ -121,8 +121,8 @@ class CloneNode(Node):
         self.get_logger().info("Inside fanuc spawn trays")
 
         try:
-            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, Time(0), timeout=Duration(seconds=1)).transform
-            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, Time(0), timeout=Duration(seconds=1)).transform
+            self.table_frame_transform = self.tf_buffer.lookup_transform('world', table_frame, self.get_clock().now(), timeout=Duration(seconds=1)).transform
+            self.image_frame_transform = self.tf_buffer.lookup_transform('world', image_frame, self.get_clock().now(), timeout=Duration(seconds=1)).transform
 
             self.table_frame_pose = Pose()
             self.table_frame_pose.position = self.table_frame_transform.translation
