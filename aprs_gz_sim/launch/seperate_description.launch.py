@@ -38,19 +38,17 @@ def launch_setup(context, *args, **kwargs):
         
         doc = xacro.process_file(urdf)
 
-        robot_description_content = doc.toprettyxml(indent='  ')
+        robot_description_content = doc.toprettyxml(indent='  ') # type: ignore
         
         # Robot state publisher
         robot_state_publisher_params = {'use_sim_time': True,
-                                        'robot_description': robot_description_content}
+                                        'robot_description': robot_description_content,
+                                        'frame_prefix': 'sim/'}
         robot_state_publishers.append(Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
             output='both',
             namespace=f"simulation/{robot}",
-            # remappings=[
-            #     ("joint_states", "/joint_states")
-            # ],
             parameters=[
                 robot_state_publisher_params
             ],
