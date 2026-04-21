@@ -26,8 +26,7 @@ class SpawnParams:
         self.initial_pose = pose_info(xyz, rpy)
         self.robot_namespace = ns
         self.reference_frame = rf
-        # initialization of fields
-    
+
     def get_sdf(self, file_path: str) -> str:
         """Read an SDF/XML file and return its contents as a string.
 
@@ -38,9 +37,9 @@ class SpawnParams:
             entity_xml = f.read()
         except IOError:
             return ''
-        
+
         return entity_xml
-    
+
     def set_xml_from_file_path(self):
         """Load the XML from the configured file_path into `self.xml`.
 
@@ -69,7 +68,7 @@ class PartSpawnParams(SpawnParams):
         'green': (0, 100, 0),
         'red': (139, 0, 0),
         'purple': (138, 0, 226),
-        'orange': (255, 140, 0)   
+        'orange': (255, 140, 0)
     }
 
     def __init__(self, name, part_type, color, xyz=[0,0,0], rpy=[0,0,0], rf=''):
@@ -90,11 +89,11 @@ class PartSpawnParams(SpawnParams):
         """
         if self.file_path is None:
             return
-        
+
         xml = ET.fromstring(self.get_sdf(self.file_path))
 
         r, g, b = self.colors[self.color]
-        color_string = str(r/255) + " " + str(g/255) + " " + str(b/255) + " 1" 
+        color_string = str(r/255) + " " + str(g/255) + " " + str(b/255) + " 1"
 
         for elem in xml.find('model').find('link').findall('visual'): # type: ignore
             if elem.attrib['name'] == "base":
@@ -113,12 +112,12 @@ class TraySpawnParams(SpawnParams):
         self.marker_id = marker_id
 
         self.modify_xml()
-    
+
     def modify_xml(self):
         """Customize the tray XML to set the marker mesh based on marker_id."""
         if self.file_path is None:
             return
-        
+
         xml = ET.fromstring(self.get_sdf(self.file_path))
 
         marker_string = "model://demo_parts/kit_tray/meshes/markers/marker_" + self.marker_id + ".dae"
@@ -126,4 +125,4 @@ class TraySpawnParams(SpawnParams):
             if elem.attrib['name'] == "marker":
                 elem.find("geometry").find("mesh").find("uri").text = marker_string # type: ignore
 
-        self.xml =  ET.tostring(xml, encoding="unicode")
+        self.xml = ET.tostring(xml, encoding="unicode")

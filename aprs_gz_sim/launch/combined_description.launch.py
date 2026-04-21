@@ -17,30 +17,27 @@ def read_yaml(path):
             return yaml.safe_load(stream)
         except yaml.YAMLError:
             print("Unable to read configuration file")
-            return {} 
+            return {}
 
 def launch_setup(context, *args, **kwargs):
-    # Get robot description
 
     urdf = os.path.join(get_package_share_directory('aprs_description'), 'urdf', 'aprs_lab_robots.urdf.xacro')
-    
+
     doc = xacro.process_file(urdf)
 
     robot_description_content = doc.toprettyxml(indent='  ')
-    
-    # Robot state publisher
+
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='both',
         namespace="simulation",
         parameters=[
-            {'use_sim_time': True}, 
+            {'use_sim_time': True},
             {'robot_description': robot_description_content}
         ],
     )
-    
-    # GZ spawn robot
+
     gz_spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
@@ -49,8 +46,7 @@ def launch_setup(context, *args, **kwargs):
                 '-name', 'aprs_robots',
                 '-allow_renaming', 'true'],
     )
-    
-    # Joint state broadcaster
+
     joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
@@ -61,15 +57,13 @@ def launch_setup(context, *args, **kwargs):
             {'use_sim_time': True},
         ],
     )
-    
-    # robot switcher
+
     controller_switcher = Node(
         package='aprs_gz_sim',
         executable='combined_controller_switcher_node.py',
         output='screen'
     )
-    
-    #Joint trajectory controllers
+
     joint_trajectory_controllers = []
     for robot in ['fanuc', 'franka', 'motoman', 'ur']:
         joint_trajectory_controllers.append(Node(

@@ -19,28 +19,26 @@ def read_yaml(path):
             return yaml.safe_load(stream)
         except yaml.YAMLError:
             print("Unable to read configuration file")
-            return {}  
+            return {}
 
 def launch_setup(context, *args, **kwargs):
     mirror_env = LaunchConfiguration("mirror_env").perform(context).lower() == "true"
-    
+
     robot_state_publishers = []
     robot_spawners = []
     joint_state_broadcasters = []
     joint_trajectory_controllers = []
     passthrough_controllers = []
 
-    robots=['fanuc', 'franka', 'motoman', 'ur']
-    # robots=["motoman"]
+    robots = ['fanuc', 'franka', 'motoman', 'ur']
 
     for robot in robots:
         urdf = os.path.join(get_package_share_directory('aprs_description'), 'urdf', f'aprs_{robot}.urdf.xacro')
-        
+
         doc = xacro.process_file(urdf)
 
         robot_description_content = doc.toprettyxml(indent='  ') # type: ignore
-        
-        # Robot state publisher
+
         robot_state_publisher_params = {'use_sim_time': True,
                                         'robot_description': robot_description_content,
                                         'frame_prefix': 'sim/'}
@@ -53,73 +51,18 @@ def launch_setup(context, *args, **kwargs):
                 robot_state_publisher_params
             ],
         ))
-        
-        # GZ spawn robot
+
         robot_spawners.append(Node(
             package='ros_gz_sim',
             executable='create',
             output='screen',
-            # name=f'{robot}_ros_gz_sim',
             arguments=[
                 "-string",
                 robot_description_content,
-                # '-topic', f'simulation/{robot}/robot_description',        
                 '-name', f'aprs_{robot}',
-                # '-allow_renaming', 'true'
             ]
         ))
-        
-        # Joint state broadcaster
-        # joint_state_broadcasters.append(Node(
-        #     package='controller_manager',
-        #     executable='spawner',
-        #     name=f'{robot}_joint_state_broadcaster_spawner',
-        #     arguments = ["joint_state_broadcaster", "-c", f"/simulation/{robot}/controller_manager"],
-        #     parameters=[{"use_sim_time": True}]
-        # ))
-        
-        # Joint trajectory controllers
-        # jt_controller_name = f'joint_trajectory_controller'
-        # jt_arguments = [jt_controller_name, "-c", f"/simulation/{robot}/controller_manager"]
-        # if mirror_env and robot in ["fanuc", "motoman"]:
-        #     jt_arguments.append('--inactive')
 
-        # joint_trajectory_controllers.append(Node(
-        #     package='controller_manager',
-        #     executable='spawner',
-        #     name=f'{robot}_controller_spawner',
-        #     arguments=jt_arguments,
-        #     parameters=[
-        #         {'use_sim_time': True},
-        #     ],
-        # ))
-
-        # joint_trajectory_controllers.append(Node(
-        #     package='controller_manager',
-        #     executable='spawner',
-        #     name='controller_spawner',
-        #     namespace=f"simulation/{robot}",
-        #     arguments=[
-        #         'joint_trajectory_controller'
-        #     ],
-        #     parameters=[
-        #         {'use_sim_time': True},
-        #     ],
-        # ))
-        
-        # if mirror_env and robot in ["fanuc", "motoman"]:
-        #     passthrough_controllers.append(Node(
-        #         package='controller_manager',
-        #         executable='spawner',
-        #         namespace=f"simulation/{robot}",
-        #         arguments=[
-        #             'passthrough_controller',
-        #         ],
-        #         parameters=[
-        #             {'use_sim_time': True},
-        #         ],
-        #     ))
-    
     controller_loader_node = Node(
         package="aprs_gz_sim",
         executable="seperate_load_controllers.py",
@@ -135,15 +78,6 @@ def launch_setup(context, *args, **kwargs):
         *joint_trajectory_controllers,
         controller_loader_node
     ]
-
-    # if bool(mirror_env):
-    #     nodes_to_start.append(
-    #         Node(
-    #             package="aprs_gz_sim",
-    #             executable="clone_real_world_node.py",
-    #             output="screen"
-    #         )
-    #     )
 
     return nodes_to_start
 
